@@ -249,20 +249,21 @@
 
         /* --- Gaya Khusus Kartu Saldo Revisi --- */
         .balance-item p {
-            font-size: 0.75rem; /* Ukuran font label saldo */
+            font-size: 0.55rem; /* Ukuran font label saldo */
             font-weight: 500;
             margin-bottom: 0.1rem;
         }
 
+        /* REVISI: Perkecil Ukuran Font Nilai Saldo Kategori */
         .balance-item .balance-value {
-            font-size: 0.75rem; /* Ukuran font nilai saldo */
+            font-size: 0.55rem; /* Diperkecil dari 0.75rem ke 0.95rem - Awalnya 0.75rem */
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
         }
         
         /* Tambahan: Gaya khusus untuk Sisa Saldo Semua Kategori */
         #sisaSaldoSemuaKategori {
-            font-size: 1.5rem; /* Ukuran font lebih besar untuk saldo akhir global */
+            font-size: 0.99rem; /* Ukuran font lebih besar untuk saldo akhir global */
             font-weight: 800;
             color: var(--color-global-saldo);
         }
@@ -273,9 +274,7 @@
         
         /* Gaya untuk Saldo Akhir Kategori Ini */
         #akhirSaldoKategori {
-            font-size: 0.75rem; /* Ukuran font sesuai item lain */
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
+            /* font-size diatur oleh .balance-value di atas */
         }
         
     </style>
@@ -308,17 +307,17 @@
                 <div class="grid grid-cols-3 gap-3 mb-4 text-center">
                     
                     <div class="balance-item border-r border-gray-200 pr-2">
-                        <p class="text-[var(--color-pemasukan)]">PEMASUKAN</p>
+                        <p class="text-[var(--color-pemasukan)]"><i class="fas fa-arrow-up-long mr-1"></i></p>
                         <p id="totalPemasukan" class="balance-value">Rp 0</p>
                     </div>
 
                     <div class="balance-item border-r border-gray-200 px-2">
-                        <p class="text-[var(--color-pengeluaran)]">PENGELUARAN</p>
+                        <p class="text-[var(--color-pengeluaran)]"><i class="fas fa-arrow-down-long mr-1"></i></p>
                         <p id="totalPengeluaran" class="balance-value">Rp 0</p>
                     </div>
                     
                     <div class="balance-item pl-2">
-                        <p class="text-[var(--color-net-saldo)]">SISA SALDO</p>
+                        <p class="text-[var(--color-net-saldo)]"><i class="fas fa-balance-scale-left mr-1"></i></p>
                         <p id="akhirSaldoKategori" class="balance-value">Rp 0</p>
                     </div>
                 </div>
@@ -441,10 +440,10 @@
         const lapisanMemuat = document.getElementById('lapisanMemuat');             // Modal loading
         
         // Referensi DOM Saldo Baru (Revisi)
-        const akhirSaldoKategoriEl = document.getElementById('akhirSaldoKategori'); // Elemen saldo akhir kategori (Perubahan nama)
+        const akhirSaldoKategoriEl = document.getElementById('akhirSaldoKategori'); // Elemen saldo akhir kategori
         const totalPemasukanEl = document.getElementById('totalPemasukan');         // Elemen total pemasukan
         const totalPengeluaranEl = document.getElementById('totalPengeluaran');     // Elemen total pengeluaran
-        const sisaSaldoSemuaKategoriEl = document.getElementById('sisaSaldoSemuaKategori'); // Elemen saldo akhir global (Baru)
+        const sisaSaldoSemuaKategoriEl = document.getElementById('sisaSaldoSemuaKategori'); // Elemen saldo akhir global
         
         const tombolTambahBaru = document.getElementById('tombolTambahBaru');         // Tombol tambah baru
         const wadahToast = document.getElementById('wadahToast');                     // Wadah notifikasi toast
@@ -461,7 +460,7 @@
         async function postToGS(data) {
             showLoading(true);
             const url = GOOGLE_APPS_SCRIPT_URL; 
-            const MAX_RETRIES = 3; 
+            const MAX_RETRIES = 3; // Maksimal percobaan ulang
 
             for (let i = 0; i < MAX_RETRIES; i++) {
                 try {
