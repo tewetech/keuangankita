@@ -42,6 +42,8 @@
             /* Warna khusus untuk Saldo */
             --color-pemasukan: var(--accent-1); /* Warna Hijau untuk Pemasukan */
             --color-pengeluaran: var(--accent-2); /* Warna Oranye untuk Pengeluaran */
+            --color-net-saldo: #007bff; /* Warna Biru untuk Saldo Akhir Kategori */
+            --color-global-saldo: #4a5568; /* Warna Abu-abu Tua untuk Saldo Global */
         }
 
         /* --- Gaya Umum untuk body (General body Style) --- */
@@ -257,12 +259,23 @@
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
         }
-
+        
+        /* Tambahan: Gaya khusus untuk Sisa Saldo Semua Kategori */
+        #sisaSaldoSemuaKategori {
+            font-size: 1.5rem; /* Ukuran font lebih besar untuk saldo akhir global */
+            font-weight: 800;
+            color: var(--color-global-saldo);
+        }
+        
+        /* Mengubah totalPemasukan dan totalPengeluaran kembali ke ukuran standar */
         #totalPemasukan { color: var(--color-pemasukan); }
         #totalPengeluaran { color: var(--color-pengeluaran); }
-        #akhirSaldo { 
-            font-size: 1.5rem; /* Ukuran font lebih besar untuk saldo akhir */
-            font-weight: 800;
+        
+        /* Gaya untuk Saldo Akhir Kategori Ini */
+        #akhirSaldoKategori {
+            font-size: 0.75rem; /* Ukuran font sesuai item lain */
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
         }
         
     </style>
@@ -286,27 +299,33 @@
                     <i class="fas fa-filter mr-2"></i> Pilih Kategori :
                 </p>
                 <div id="filterBulanContainer" class="grid grid-cols-2 md:grid-cols-3 gap-1.5">
-                    </div>
+                </div>
             </div>
 
-            <div id="kartuSaldo" class="glass-card p-4 rounded-xl shadow-inner text-center transition duration-300">
-                <p class="text-xs opacity-90 font-['JetBrains_Mono',_monospace] text-gray-500 mb-3">RINGKASAN KEUANGAN KATEGORI INI:</p>
+            <div id="kartuSaldo" class="glass-card p-4 rounded-xl shadow-inner transition duration-300">
+                <p class="text-xs opacity-90 font-['JetBrains_Mono',_monospace] text-gray-500 mb-3 text-center">RINGKASAN KEUANGAN KATEGORI INI:</p>
                 
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="balance-item text-left border-r border-gray-200 pr-4">
-                        <p class="text-[var(--color-pemasukan)]">TOTAL PEMASUKAN:</p>
+                <div class="grid grid-cols-3 gap-3 mb-4 text-center">
+                    
+                    <div class="balance-item border-r border-gray-200 pr-2">
+                        <p class="text-[var(--color-pemasukan)]">PEMASUKAN</p>
                         <p id="totalPemasukan" class="balance-value">Rp 0</p>
                     </div>
 
-                    <div class="balance-item text-right pl-4">
-                        <p class="text-[var(--color-pengeluaran)]">TOTAL PENGELUARAN:</p>
+                    <div class="balance-item border-r border-gray-200 px-2">
+                        <p class="text-[var(--color-pengeluaran)]">PENGELUARAN</p>
                         <p id="totalPengeluaran" class="balance-value">Rp 0</p>
+                    </div>
+                    
+                    <div class="balance-item pl-2">
+                        <p class="text-[var(--color-net-saldo)]">SISA SALDO</p>
+                        <p id="akhirSaldoKategori" class="balance-value">Rp 0</p>
                     </div>
                 </div>
 
-                <div class="border-t border-gray-200 pt-3">
-                    <p class="text-sm font-bold text-[var(--text-main)] mb-1">SALDO AKHIR:</p>
-                    <p id="akhirSaldo" class="text-3xl font-extrabold mt-1 font-['JetBrains_Mono',_monospace] text-gray-500">Rp 0</p>
+                <div class="border-t border-gray-200 pt-3 text-center">
+                    <p class="text-sm font-bold text-[var(--text-main)] mb-1">SISA SALDO SEMUA KATEGORI:</p>
+                    <p id="sisaSaldoSemuaKategori" class="font-extrabold mt-1 font-['JetBrains_Mono',_monospace]">Rp 0</p>
                 </div>
             </div>
         </div>
@@ -398,7 +417,7 @@
         // ====================================================================
         
         // URL DEPLOYMENT Apps Script Anda (WAJIB DIGANTI dengan URL TERBARU Anda)
-        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1ChWNZdhZvSdNk8fiLGuzHOXqvvuos911fMZSq1WPAScYk-urakhskk6QE5BcJTMA/exec"; // <-- WAJIB GANTI INI
+        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBExQoFr8APOO95FzJGLe6ehemqG0IK4qYpQwLJogT3nORec5e1ONtLl5uyx_Ps4rs2A/exec"; // <-- WAJIB GANTI INI
 
         // DAFTAR KATEGORI BARU UNTUK FILTER UTAMA (Nama Sheet di Spreadsheet)
         const CATEGORY_DATA = ["Mahar", "Mas Kawin", "Seserahan", "Souvenir", "Undangan", "Lain Lain"];
@@ -411,9 +430,10 @@
         let transactionIdToDelete = null; // ID transaksi yang akan dihapus
         
         // Variabel Saldo Baru (Revisi)
-        let finalBalanceValue = 0; // Nilai Saldo Akhir Kategori
+        let finalBalanceCategoryValue = 0; // Nilai Saldo Akhir Kategori (Perubahan nama)
         let totalIncomeValue = 0; // Nilai Total Pemasukan Kategori
         let totalExpenseValue = 0; // Nilai Total Pengeluaran Kategori
+        let globalFinalBalanceValue = 0; // Nilai Sisa Saldo Semua Kategori (Baru)
         
         // Referensi DOM
         const filterBulanContainer = document.getElementById('filterBulanContainer'); // Kontainer tombol Kategori
@@ -421,9 +441,10 @@
         const lapisanMemuat = document.getElementById('lapisanMemuat');             // Modal loading
         
         // Referensi DOM Saldo Baru (Revisi)
-        const akhirSaldoEl = document.getElementById('akhirSaldo');                 // Elemen saldo akhir
+        const akhirSaldoKategoriEl = document.getElementById('akhirSaldoKategori'); // Elemen saldo akhir kategori (Perubahan nama)
         const totalPemasukanEl = document.getElementById('totalPemasukan');         // Elemen total pemasukan
         const totalPengeluaranEl = document.getElementById('totalPengeluaran');     // Elemen total pengeluaran
+        const sisaSaldoSemuaKategoriEl = document.getElementById('sisaSaldoSemuaKategori'); // Elemen saldo akhir global (Baru)
         
         const tombolTambahBaru = document.getElementById('tombolTambahBaru');         // Tombol tambah baru
         const wadahToast = document.getElementById('wadahToast');                     // Wadah notifikasi toast
@@ -482,6 +503,22 @@
                 }
             }
         }
+
+        /** Mengambil sisa saldo semua kategori dari Apps Script (NEW FUNCTION) */
+        async function fetchGlobalBalance() {
+             try {
+                // Menggunakan aksi 'READ_ALL_BALANCE' yang baru di Apps Script
+                const result = await postToGS({ action: 'READ_ALL_BALANCE', month: currentSelectedCategory }); 
+                globalFinalBalanceValue = parseFloat(result.totalSaldo) || 0;
+                updateSaldoDisplay();
+            } catch (error) {
+                console.error("Gagal memuat saldo global:", error);
+                globalFinalBalanceValue = 0; // Reset jika gagal
+                updateSaldoDisplay();
+                showToast(`Gagal memuat saldo global: ${error.message}`, 'error');
+            }
+        }
+
 
         /** Menampilkan notifikasi toast (Show Toast Notification) */
         function showToast(message, type) {
@@ -635,8 +672,8 @@
                     noDataRow.innerHTML = `<td colspan="7" class="text-center py-4 text-[var(--text-subtle)]">Tidak ada data transaksi untuk kategori ${category}.</td>`;
                     tabelDataTransaksi.appendChild(noDataRow);
                     
-                    // Reset semua saldo
-                    finalBalanceValue = 0; 
+                    // Reset semua saldo kategori
+                    finalBalanceCategoryValue = 0; 
                     totalIncomeValue = 0;
                     totalExpenseValue = 0;
                 } else {
@@ -649,12 +686,15 @@
                         tempExpense += parseFloat(rowData[4]) || 0;
                     });
                     
-                    // Ambil saldo akhir dari baris terakhir (index 5)
-                    finalBalanceValue = parseFloat(data[data.length - 1][5]) || 0; 
+                    // Ambil saldo akhir kategori dari baris terakhir (index 5)
+                    finalBalanceCategoryValue = parseFloat(data[data.length - 1][5]) || 0; 
                     totalIncomeValue = tempIncome;
                     totalExpenseValue = tempExpense;
                 }
-
+                
+                // Muat ulang Saldo Global (Baru)
+                await fetchGlobalBalance(); 
+                
                 updateSaldoDisplay();
                 updateCategoryButtons(category); // Perbarui tampilan tombol kategori
 
@@ -662,7 +702,7 @@
                 showToast(`Gagal memuat data: ${error.message}`, 'error');
                 tabelDataTransaksi.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-red-500">${error.message}</td></tr>`;
                 // Reset saldo pada error
-                finalBalanceValue = 0;
+                finalBalanceCategoryValue = 0;
                 totalIncomeValue = 0;
                 totalExpenseValue = 0;
                 updateSaldoDisplay();
@@ -673,17 +713,21 @@
             }
         }
 
-        /** Memperbarui tampilan saldo (Pemasukan, Pengeluaran, Saldo Akhir) (Update All Balance Displays) */
+        /** Memperbarui tampilan saldo (Pemasukan, Pengeluaran, Saldo Akhir Kategori, Saldo Global) (Update All Balance Displays) */
         function updateSaldoDisplay() {
-            // Update Total Pemasukan
+            // 1. Update Total Pemasukan
             totalPemasukanEl.textContent = formatRupiah(totalIncomeValue);
             
-            // Update Total Pengeluaran
+            // 2. Update Total Pengeluaran
             totalPengeluaranEl.textContent = formatRupiah(totalExpenseValue);
 
-            // Update Saldo Akhir
-            akhirSaldoEl.textContent = formatRupiah(finalBalanceValue);
-            akhirSaldoEl.style.color = finalBalanceValue < 0 ? 'var(--color-delete)' : 'var(--accent-1)';
+            // 3. Update Saldo Akhir Kategori
+            akhirSaldoKategoriEl.textContent = formatRupiah(finalBalanceCategoryValue);
+            akhirSaldoKategoriEl.style.color = finalBalanceCategoryValue < 0 ? 'var(--color-delete)' : 'var(--color-net-saldo)';
+            
+            // 4. Update Sisa Saldo Semua Kategori (Baru)
+            sisaSaldoSemuaKategoriEl.textContent = formatRupiah(globalFinalBalanceValue);
+            sisaSaldoSemuaKategoriEl.style.color = globalFinalBalanceValue < 0 ? 'var(--color-delete)' : 'var(--color-global-saldo)';
         }
 
         /** Membuat satu baris tabel (<tr>) dari data transaksi (Create Table Row) */
@@ -791,7 +835,7 @@
 
             // 5. SALDO
             const saldoTd = document.createElement('td');
-            saldoTd.textContent = formatRupiah(finalBalanceValue); // Saldo Akhir kategori sebelumnya
+            saldoTd.textContent = formatRupiah(finalBalanceCategoryValue); // Saldo Akhir kategori sebelumnya
             saldoTd.classList.add('opacity-50', 'italic', 'text-right');
             newRow.appendChild(saldoTd);
 
@@ -929,7 +973,7 @@
                 await postToGS(dataToSend);
                 showToast("Transaksi berhasil ditambahkan!", 'success');
                 isAddingNew = false;
-                fetchData(currentSelectedCategory); // Muat ulang data
+                fetchData(currentSelectedCategory); // Muat ulang data & saldo global
             } catch (error) {
                 showToast(`Gagal menambahkan: ${error.message}`, 'error');
             }
@@ -967,7 +1011,7 @@
                 await postToGS(dataToSend);
                 showToast("Transaksi berhasil diperbarui!", 'success');
                 isEditing = false;
-                fetchData(currentSelectedCategory); // Muat ulang data
+                fetchData(currentSelectedCategory); // Muat ulang data & saldo global
             } catch (error) {
                 showToast(`Gagal memperbarui: ${error.message}`, 'error');
             }
@@ -999,7 +1043,7 @@
                 });
                 showToast("Transaksi berhasil dihapus!", 'success');
                 transactionIdToDelete = null;
-                fetchData(currentSelectedCategory); // Muat ulang data
+                fetchData(currentSelectedCategory); // Muat ulang data & saldo global
             } catch (error) {
                 showToast(`Gagal menghapus: ${error.message}`, 'error');
             }
@@ -1110,7 +1154,7 @@
                 transactionIdToDelete = null;
             };
 
-            // 3. Muat data untuk kategori default (Mahar)
+            // 3. Muat data untuk kategori default (Mahar) dan Saldo Global
             fetchData();
         }
 
