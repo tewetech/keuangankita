@@ -161,14 +161,15 @@
         }
         
         /* --- Pengaturan Rata Tengah/Kanan untuk Isi Kolom (Column Content Alignment) --- */
+        /* CATATAN: Karena kolom SALDO dihapus, indeks harus direvisi */
         .data-table tbody td:nth-child(2) { text-align: center; } /* TANGGAL */
         .data-table tbody td:nth-child(3) { text-align: left; } /* KETERANGAN (Deskripsi) */
         .data-table tbody td:nth-child(4), /* PEMASUKAN */
-        .data-table tbody td:nth-child(5), /* PENGELUARAN */
-        .data-table tbody td:nth-child(6) { 
+        .data-table tbody td:nth-child(5) { 
             text-align: right; /* Rata Kanan untuk nominal uang */
         }
-        .data-table tbody td:nth-child(7) { text-align: center; } /* AKSI */
+        /* Kolom SALDO (index 6) dihapus */
+        .data-table tbody td:nth-child(6) { text-align: center; } /* AKSI (Sekarang index 6) */
 
 
         /* Mengganti baris ganjil/genap dengan gaya default agar lebih bersih */
@@ -288,7 +289,7 @@
                 <i class="fas fa-chart-line mr-2"></i> KEUANGAN KITA
             </h1>
             <p class="text-[var(--text-subtle)] mt-1 font-['JetBrains_Mono',_monospace] text-xs">
-                Keuangan Kita | By Tewe Tech
+                Keuangan Kita | By Tewe Tech V1.2
             </p>
         </header>
 
@@ -302,7 +303,7 @@
             </div>
 
             <div id="kartuSaldo" class="glass-card p-4 rounded-xl shadow-inner transition duration-300">
-                <p class="text-xs opacity-90 font-['JetBrains_Mono',_monospace] text-gray-500 mb-3 text-center">RINGKASAN KEUANGAN KATEGORI INI:</p>
+                <p class="text-xs opacity-90 font-['JetBrains_Mono',_monospace] text-gray-500 mb-3 text-center">RINGKASAN KEUANGAN KATEGORI INI</p>
                 
                 <div class="grid grid-cols-3 gap-3 mb-4 text-center">
                     
@@ -323,7 +324,7 @@
                 </div>
 
                 <div class="border-t border-gray-200 pt-3 text-center">
-                    <p class="text-sm font-bold text-[var(--text-main)] mb-1">SISA SALDO SEMUA KATEGORI:</p>
+                    <p class="text-sm font-bold text-[var(--text-main)] mb-1">SISA SALDO SEMUA KATEGORI</p>
                     <p id="sisaSaldoSemuaKategori" class="font-extrabold mt-1 font-['JetBrains_Mono',_monospace]">0</p>
                 </div>
             </div>
@@ -366,12 +367,11 @@
                             <th class="px-6 py-2 text-center text-xs uppercase tracking-wider">KETERANGAN</th> 
                             <th class="px-3 py-2 text-center text-xs uppercase tracking-wider">PEMASUKAN</th>
                             <th class="px-3 py-2 text-center text-xs uppercase tracking-wider">PENGELUARAN</th>
-                            <th class="px-3 py-2 text-center text-xs uppercase tracking-wider">SALDO</th>
                             <th class="px-3 py-2 text-center text-xs uppercase tracking-wider">AKSI</th> 
                         </tr>
                     </thead>
                     <tbody id="tabelDataTransaksi" class="divide-y divide-[var(--border-color)]">
-                        <tr><td colspan="7" class="text-center py-4 text-[var(--text-subtle)]">Silakan pilih kategori di atas.</td></tr>
+                        <tr><td colspan="6" class="text-center py-4 text-[var(--text-subtle)]">Silakan pilih kategori di atas.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -428,18 +428,18 @@
         let currentSelectedCategory = CATEGORY_DATA[0]; // Kategori/Sheet yang saat ini dipilih (default: Mahar)
         let transactionIdToDelete = null; // ID transaksi yang akan dihapus
         
-        // Variabel Saldo Baru (Revisi)
-        let finalBalanceCategoryValue = 0; // Nilai Saldo Akhir Kategori (Perubahan nama)
+        // Variabel Saldo
+        let finalBalanceCategoryValue = 0; // Nilai Saldo Akhir Kategori
         let totalIncomeValue = 0; // Nilai Total Pemasukan Kategori
         let totalExpenseValue = 0; // Nilai Total Pengeluaran Kategori
-        let globalFinalBalanceValue = 0; // Nilai Sisa Saldo Semua Kategori (Baru)
+        let globalFinalBalanceValue = 0; // Nilai Sisa Saldo Semua Kategori
         
         // Referensi DOM
         const filterBulanContainer = document.getElementById('filterBulanContainer'); // Kontainer tombol Kategori
         const tabelDataTransaksi = document.getElementById('tabelDataTransaksi');     // Body tabel transaksi
         const lapisanMemuat = document.getElementById('lapisanMemuat');             // Modal loading
         
-        // Referensi DOM Saldo Baru (Revisi)
+        // Referensi DOM Saldo
         const akhirSaldoKategoriEl = document.getElementById('akhirSaldoKategori'); // Elemen saldo akhir kategori
         const totalPemasukanEl = document.getElementById('totalPemasukan');         // Elemen total pemasukan
         const totalPengeluaranEl = document.getElementById('totalPengeluaran');     // Elemen total pengeluaran
@@ -573,8 +573,7 @@
 
         /** Mengubah string Rupiah menjadi angka (Parse Rupiah String to Number) */
         function parseRupiah(rupiahString) {
-            // Hapus 'Rp', titik sebagai ribuan, dan koma desimal
-            // Karena sekarang tanpa Rp, hanya perlu hapus titik dan ganti koma ke titik (jika ada desimal, tapi di sini diasumsikan bilangan bulat)
+            // Hapus karakter non-digit kecuali tanda minus, koma, dan titik
             const cleanString = rupiahString.replace(/[^0-9,-]/g, '').replace(',', '.'); 
             const number = parseFloat(cleanString);
             return isNaN(number) ? 0 : number;
@@ -664,10 +663,14 @@
                 let tempIncome = 0;
                 let tempExpense = 0;
 
+                // Hitung jumlah kolom untuk colspan pada pesan "Tidak ada data"
+                // 1 (ID tersembunyi) + 1 (Tanggal) + 1 (Keterangan) + 1 (Pemasukan) + 1 (Pengeluaran) + 1 (Aksi) = 6 kolom
+                const colspanValue = 6; 
+
                 if (data.length === 0) {
                     // Tampilkan pesan "Tidak ada data"
                     const noDataRow = document.createElement('tr');
-                    noDataRow.innerHTML = `<td colspan="7" class="text-center py-4 text-[var(--text-subtle)]">Tidak ada data transaksi untuk kategori ${category}.</td>`;
+                    noDataRow.innerHTML = `<td colspan="${colspanValue}" class="text-center py-4 text-[var(--text-subtle)]">Tidak ada data transaksi untuk kategori ${category}.</td>`;
                     tabelDataTransaksi.appendChild(noDataRow);
                     
                     // Reset semua saldo kategori
@@ -677,6 +680,7 @@
                 } else {
                     // Render data ke tabel dan hitung total pemasukan/pengeluaran
                     data.forEach(rowData => {
+                        // rowData: [ID, Tanggal, Keterangan, Pemasukan, Pengeluaran, Saldo]
                         tabelDataTransaksi.appendChild(createTableRow(rowData));
                         
                         // rowData index 3: pemasukan, index 4: pengeluaran
@@ -690,7 +694,7 @@
                     totalExpenseValue = tempExpense;
                 }
                 
-                // Muat ulang Saldo Global (Baru)
+                // Muat ulang Saldo Global
                 await fetchGlobalBalance(); 
                 
                 updateSaldoDisplay();
@@ -698,7 +702,7 @@
 
             } catch (error) {
                 showToast(`Gagal memuat data: ${error.message}`, 'error');
-                tabelDataTransaksi.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-red-500">${error.message}</td></tr>`;
+                tabelDataTransaksi.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">${error.message}</td></tr>`;
                 // Reset saldo pada error
                 finalBalanceCategoryValue = 0;
                 totalIncomeValue = 0;
@@ -721,45 +725,44 @@
 
             // 3. Update Saldo Akhir Kategori
             akhirSaldoKategoriEl.textContent = formatAngka(finalBalanceCategoryValue);
+            // Ganti warna jika saldo negatif
             akhirSaldoKategoriEl.style.color = finalBalanceCategoryValue < 0 ? 'var(--color-delete)' : 'var(--color-net-saldo)';
             
-            // 4. Update Sisa Saldo Semua Kategori (Baru)
+            // 4. Update Sisa Saldo Semua Kategori
             sisaSaldoSemuaKategoriEl.textContent = formatAngka(globalFinalBalanceValue);
+            // Ganti warna jika saldo negatif
             sisaSaldoSemuaKategoriEl.style.color = globalFinalBalanceValue < 0 ? 'var(--color-delete)' : 'var(--color-global-saldo)';
         }
 
         /** Membuat satu baris tabel (<tr>) dari data transaksi (Create Table Row) */
         function createTableRow(rowData) {
+            // rowData: [id (0), tanggal (1), keterangan (2), pemasukan (3), pengeluaran (4), saldo (5)]
             const [id, tanggal, keterangan, pemasukan, pengeluaran, saldo] = rowData;
 
             const row = document.createElement('tr');
             row.dataset.id = id;
 
-            // Kolom 1: ID Transaksi (Tersembunyi)
+            // Kolom 1: ID Transaksi (Tersembunyi) - Index 0
             const tdId = document.createElement('td');
             tdId.className = 'hidden-ts-col';
             tdId.textContent = id;
             row.appendChild(tdId);
 
-            // Kolom 2: TANGGAL
+            // Kolom 2: TANGGAL - Index 1
             row.appendChild(createDataCell(formatDateToIndonesian(tanggal), 'text-center'));
 
-            // Kolom 3: KETERANGAN
+            // Kolom 3: KETERANGAN - Index 2
             row.appendChild(createDataCell(keterangan, 'text-left')); 
 
-            // Kolom 4: PEMASUKAN
-            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
+            // Kolom 4: PEMASUKAN - Index 3
             row.appendChild(createDataCell(formatAngka(pemasukan), 'text-right'));
 
-            // Kolom 5: PENGELUARAN
-            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
+            // Kolom 5: PENGELUARAN - Index 4
             row.appendChild(createDataCell(formatAngka(pengeluaran), 'text-right'));
 
-            // Kolom 6: SALDO
-            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
-            row.appendChild(createDataCell(formatAngka(saldo), 'text-right'));
+            // **KOLOM SALDO (Index 5) DIHILANGKAN DARI TAMPILAN BARIS**
 
-            // Kolom 7: AKSI (Edit, Hapus) - Dibuat sejajar menggunakan div.table-action-container
+            // Kolom 6: AKSI (Edit, Hapus) - Index 5 (Karena Saldo dihapus)
             const tdAksi = document.createElement('td');
             tdAksi.className = 'text-center';
             tdAksi.innerHTML = `
@@ -806,42 +809,37 @@
             newRow.id = 'baris-input-baru';
             newRow.dataset.id = 'NEW';
 
-            // Td ID (tersembunyi)
+            // Td ID (tersembunyi) - Index 0
             newRow.innerHTML += '<td class="hidden-ts-col">NEW</td>';
 
-            // 1. TANGGAL
+            // 1. TANGGAL - Index 1
             const tanggalTd = document.createElement('td');
             const today = new Date().toISOString().split('T')[0];
             const tanggalInput = createInput('date', today);
             tanggalTd.appendChild(tanggalInput);
             newRow.appendChild(tanggalTd);
 
-            // 2. KETERANGAN (Input Teks Bebas)
+            // 2. KETERANGAN (Input Teks Bebas) - Index 2
             const keteranganTd = document.createElement('td');
             const keteranganInput = createInput('text', '', 'Contoh: Emas 10 gram'); 
             keteranganTd.appendChild(keteranganInput);
             newRow.appendChild(keteranganTd);
 
-            // 3. PEMASUKAN
+            // 3. PEMASUKAN - Index 3
             const pemasukanTd = document.createElement('td');
             const pemasukanInput = createInput('number', 0, 'Pemasukan');
             pemasukanTd.appendChild(pemasukanInput);
             newRow.appendChild(pemasukanTd);
 
-            // 4. PENGELUARAN
+            // 4. PENGELUARAN - Index 4
             const pengeluaranTd = document.createElement('td');
             const pengeluaranInput = createInput('number', 0, 'Pengeluaran');
             pengeluaranTd.appendChild(pengeluaranInput);
             newRow.appendChild(pengeluaranTd);
 
-            // 5. SALDO
-            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
-            const saldoTd = document.createElement('td');
-            saldoTd.textContent = formatAngka(finalBalanceCategoryValue); // Saldo Akhir kategori sebelumnya
-            saldoTd.classList.add('opacity-50', 'italic', 'text-right');
-            newRow.appendChild(saldoTd);
-
-            // 6. AKSI - Dibuat sejajar
+            // **KOLOM SALDO ASLI DIHAPUS, JADI TIDAK PERLU SEL SALDO BARU**
+            
+            // 5. AKSI - Index 5
             const aksiTd = document.createElement('td');
             aksiTd.className = 'text-center';
             aksiTd.innerHTML = `
@@ -886,15 +884,18 @@
             originalRowContent = row.innerHTML;
 
             // Ambil sel data (kecuali ID tersembunyi)
-            const cells = Array.from(row.querySelectorAll('td:not(.hidden-ts-col)'));
-            const dataCells = cells.slice(0, 5); 
+            // Total ada 6 sel: [Tanggal, Keterangan, Pemasukan, Pengeluaran, Aksi] + (Saldo yang dihilangkan secara visual, tapi perlu dihitung selnya)
+            // *PENTING*: Saat `createTableRow` dibuat, total ada 6 sel yang ditampilkan (ID tersembunyi, Tanggal, Keterangan, Pemasukan, Pengeluaran, Aksi).
+            // Jadi, `row.querySelectorAll('td')` akan menghasilkan 6 elemen.
+            const cells = Array.from(row.querySelectorAll('td'));
+            const idCell = cells[0]; // ID tersembunyi
+            const dataCells = cells.slice(1, 5); // [Tanggal, Keterangan, Pemasukan, Pengeluaran]
             const aksiCell = cells[5]; // Kolom Aksi
 
             
             // Data saat ini (untuk mengisi nilai default input)
             const currentDate = dataCells[0].textContent; // Tanggal (DD Bulan YYYY)
             const currentKeterangan = dataCells[1].textContent; // Keterangan (Teks Bebas)
-            // Menggunakan parseRupiah, meskipun sekarang formatnya sudah tanpa Rp, parseRupiah tetap berfungsi untuk menghapus titik/koma ribuan
             const currentPemasukan = parseRupiah(dataCells[2].textContent); // Pemasukan
             const currentPengeluaran = parseRupiah(dataCells[3].textContent); // Pengeluaran
 
@@ -918,10 +919,9 @@
             dataCells[3].textContent = '';
             dataCells[3].appendChild(pengeluaranInput);
 
-            // 5. SALDO - Non-Editable, hanya tampilan
-            dataCells[4].classList.add('opacity-50', 'italic');
+            // **KOLOM SALDO DIHAPUS DARI TAMPILAN, JADI TIDAK PERLU DIPROSES DI SINI**
 
-            // 6. AKSI - Ganti dengan Simpan & Batal (Dibuat sejajar)
+            // 5. AKSI - Ganti dengan Simpan & Batal
             aksiCell.innerHTML = `
                 <div class="table-action-container">
                     <button
@@ -951,9 +951,11 @@
             
             // Ambil nilai dari input/select
             const tanggal = row.querySelector('input[type="date"]').value;
-            // Ambil Keterangan dari input teks (kolom ke-3, index 2)
+            // Keterangan: input teks ada di td ke-3
             const keterangan = row.querySelector('td:nth-child(3) input').value; 
+            // Pemasukan: input number pertama
             const pemasukan = parseFloat(row.querySelectorAll('input[type="number"]')[0].value) || 0;
+            // Pengeluaran: input number kedua
             const pengeluaran = parseFloat(row.querySelectorAll('input[type="number"]')[1].value) || 0;
             
             // Cek validitas data
@@ -989,9 +991,11 @@
 
             // Ambil nilai dari input/select
             const tanggal = row.querySelector('input[type="date"]').value;
-            // Ambil Keterangan dari input teks (kolom ke-3, index 2)
+            // Keterangan: input teks ada di td ke-3
             const keterangan = row.querySelector('td:nth-child(3) input').value; 
+            // Pemasukan: input number pertama
             const pemasukan = parseFloat(row.querySelectorAll('input[type="number"]')[0].value) || 0;
+            // Pengeluaran: input number kedua
             const pengeluaran = parseFloat(row.querySelectorAll('input[type="number"]')[1].value) || 0;
 
             if (!tanggal || !keterangan) {
@@ -1076,7 +1080,7 @@
         // FUNGSI INISIALISASI & UI (INITIALIZATION & UI FUNCTIONS)
         // ====================================================================
 
-        /** Membuat tombol Kategori (sebelumnya tombol bulan) (Create Category Button) */
+        /** Membuat tombol Kategori (Create Category Button) */
         function createCategoryButton(categoryName) {
             const button = document.createElement('button');
             button.textContent = categoryName; // Tampilkan nama kategori penuh
@@ -1099,47 +1103,83 @@
 
             let csv = [];
             
-            // Ambil Header
+            // Ambil Header (Hanya yang tidak tersembunyi)
             const headers = Array.from(table.querySelectorAll('thead th:not(.hidden-ts-col)'))
                                 .map(th => th.textContent.trim());
-            csv.push(headers.join(';'));
+            // Hapus header 'AKSI' dari CSV
+            const dataHeaders = headers.slice(0, headers.length - 1); // [TANGGAL, KETERANGAN, PEMASUKAN, PENGELUARAN]
+            // Tambahkan header 'SALDO' secara manual karena di tampilan dihilangkan
+            dataHeaders.push('SALDO');
+            csv.push(dataHeaders.join(';')); 
             
             // Ambil Data Baris
-            table.querySelectorAll('tbody tr').forEach(row => {
-                // Skip baris input/edit baru
-                if (row.id === 'baris-input-baru') return; 
-                // Ambil semua sel data (kecuali yang tersembunyi)
-                const rowData = Array.from(row.querySelectorAll('td:not(.hidden-ts-col)'))
-                                        .slice(0, 6) // Hanya 6 kolom data (Tanggal s.d. Saldo)
-                                        // Hapus pemisah ribuan (titik) dan ganti koma desimal (jika ada) ke titik untuk format angka standar CSV
-                                        .map(td => td.textContent.trim().replace(/\./g, '').replace(',', '.')); 
-
-                if (rowData.length === 6) {
-                     // Pastikan koma desimal diganti menjadi titik untuk standar CSV
-                    const formattedData = rowData.map(d => d.replace(/\./g, '').replace(',', '.')); 
-                    csv.push(formattedData.join(';'));
-                }
-            });
-
-            if (csv.length <= 1) {
-                showToast(`Tidak ada data untuk diekspor di kategori ${currentSelectedCategory}.`, 'accent-3');
-                return;
-            }
-
-            const csvString = csv.join('\n');
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
+            // Data transaksi dari server berisi [id(0), tanggal(1), keterangan(2), pemasukan(3), pengeluaran(4), saldo(5)]
+            // Kita perlu mengambil semua data mentah kecuali ID, lalu format untuk CSV.
+            // Sayangnya, data transaksi mentah tidak tersedia di sini.
+            // SOLUSI: Kirim permintaan READ_DATA lagi tanpa merender UI untuk mendapatkan data mentah
             
-            // Nama file: Keuangan_Kategori.csv
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Keuangan_${currentSelectedCategory}.csv`);
-            link.style.visibility = 'hidden';
+            // NOTE: Karena permintaan asinkron di dalam fungsi sinkron,
+            // dan untuk menjaga agar fungsi exportToCSV tetap sinkron seperti aslinya, 
+            // kita akan menggunakan data yang sudah ada di tabel (walaupun Saldo tidak ada)
+            // ATAU membuat permintaan asinkron baru. Kita pilih membuat permintaan asinkron:
             
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast("Data berhasil diekspor ke CSV!", 'success');
+            // Tambahkan loading overlay
+            showLoading(true);
+
+            postToGS({ action: 'READ_DATA', month: currentSelectedCategory })
+                .then(result => {
+                    const rawData = result.data || [];
+                    
+                    if (rawData.length === 0) {
+                        showLoading(false);
+                        showToast(`Tidak ada data untuk diekspor di kategori ${currentSelectedCategory}.`, 'accent-3');
+                        return;
+                    }
+
+                    // rawData: [id(0), tanggal(1), keterangan(2), pemasukan(3), pengeluaran(4), saldo(5)]
+                    rawData.forEach(rowData => {
+                        // Ambil Tanggal, Keterangan, Pemasukan, Pengeluaran, Saldo
+                        const rowDataToExport = rowData.slice(1); // [tanggal, keterangan, pemasukan, pengeluaran, saldo]
+                        
+                        // Format angka: hapus pemisah ribuan (titik) dan ganti koma desimal (jika ada) ke titik untuk format angka standar CSV
+                        const formattedData = rowDataToExport.map(d => {
+                            if (typeof d === 'string') {
+                                // Hapus tanda minus jika angka positif, biarkan jika negatif
+                                const isNegative = d.includes('-');
+                                const cleanD = d.replace(/[^0-9,.]/g, '').replace(',', '.');
+                                // Hanya format yang terlihat seperti angka
+                                return !isNaN(parseFloat(cleanD)) ? (isNegative ? `-${cleanD.replace('-', '')}` : cleanD) : d;
+                            }
+                            // Jika sudah dalam bentuk angka, konversi ke string
+                            return String(d).replace(/\./g, '').replace(',', '.');
+                        });
+                        
+                        if (formattedData.length === 5) { // 5 kolom: Tanggal, Keterangan, Pemasukan, Pengeluaran, Saldo
+                             csv.push(formattedData.join(';'));
+                        }
+                    });
+
+                    const csvString = csv.join('\n');
+                    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement("a");
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Nama file: Keuangan_Kategori.csv
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", `Keuangan_${currentSelectedCategory}.csv`);
+                    link.style.visibility = 'hidden';
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    showToast("Data berhasil diekspor ke CSV!", 'success');
+                    showLoading(false);
+
+                })
+                .catch(error => {
+                    showLoading(false);
+                    showToast(`Gagal mengekspor data: ${error.message}`, 'error');
+                });
         }
 
 
