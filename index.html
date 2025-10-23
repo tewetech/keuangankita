@@ -256,7 +256,7 @@
 
         /* REVISI: Perkecil Ukuran Font Nilai Saldo Kategori */
         .balance-item .balance-value {
-            font-size: 0.55rem; /* Diperkecil dari 0.75rem ke 0.95rem - Awalnya 0.75rem */
+            font-size: 0.55rem; /* Ukuran font nilai saldo kategori */
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -298,7 +298,7 @@
                     <i class="fas fa-filter mr-2"></i> Pilih Kategori :
                 </p>
                 <div id="filterBulanContainer" class="grid grid-cols-2 md:grid-cols-3 gap-1.5">
-                </div>
+                    </div>
             </div>
 
             <div id="kartuSaldo" class="glass-card p-4 rounded-xl shadow-inner transition duration-300">
@@ -307,24 +307,24 @@
                 <div class="grid grid-cols-3 gap-3 mb-4 text-center">
                     
                     <div class="balance-item border-r border-gray-200 pr-2">
-                        <p class="text-[var(--color-pemasukan)]"><i class="fas fa-arrow-up-long mr-1"></i></p>
-                        <p id="totalPemasukan" class="balance-value">Rp 0</p>
+                        <p class="text-[var(--color-pemasukan)]"><i class="fas fa-arrow-down-long mr-1"></i></p>
+                        <p id="totalPemasukan" class="balance-value">0</p>
                     </div>
 
                     <div class="balance-item border-r border-gray-200 px-2">
-                        <p class="text-[var(--color-pengeluaran)]"><i class="fas fa-arrow-down-long mr-1"></i></p>
-                        <p id="totalPengeluaran" class="balance-value">Rp 0</p>
+                        <p class="text-[var(--color-pengeluaran)]"><i class="fas fa-arrow-up-long mr-1"></i></p>
+                        <p id="totalPengeluaran" class="balance-value">0</p>
                     </div>
                     
                     <div class="balance-item pl-2">
                         <p class="text-[var(--color-net-saldo)]"><i class="fas fa-balance-scale-left mr-1"></i></p>
-                        <p id="akhirSaldoKategori" class="balance-value">Rp 0</p>
+                        <p id="akhirSaldoKategori" class="balance-value">0</p>
                     </div>
                 </div>
 
                 <div class="border-t border-gray-200 pt-3 text-center">
                     <p class="text-sm font-bold text-[var(--text-main)] mb-1">SISA SALDO SEMUA KATEGORI:</p>
-                    <p id="sisaSaldoSemuaKategori" class="font-extrabold mt-1 font-['JetBrains_Mono',_monospace]">Rp 0</p>
+                    <p id="sisaSaldoSemuaKategori" class="font-extrabold mt-1 font-['JetBrains_Mono',_monospace]">0</p>
                 </div>
             </div>
         </div>
@@ -332,9 +332,9 @@
         <div class="glass-card p-4 overflow-x-auto relative">
             
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg md:text-xl font-semibold text-[var(--text-main)]">
-                    <i class="fas fa-receipt mr-2"></i> Rincian :
-                </h2>
+                <h2 class="text-sm font-semibold text-[var(--text-main)]">
+    <i class="fas fa-receipt mr-2"></i> Rincian :
+</h2>
                 <div class="flex space-x-2">
                     <button 
                         id="tombolSimpanCsv" 
@@ -556,26 +556,25 @@
             lapisanMemuat.classList.toggle('modal-open', state);
         }
 
-        /** Format angka menjadi format Rupiah (Format Number to Rupiah) */
-        function formatRupiah(angka) {
-            if (typeof angka !== 'number' && typeof angka !== 'string') return 'Rp 0';
+        /** Format angka menjadi format Rupiah tanpa simbol 'Rp' (Format Number without Rupiah Symbol) */
+        function formatAngka(angka) {
+            if (typeof angka !== 'number' && typeof angka !== 'string') return '0';
             const num = typeof angka === 'string' ? parseFloat(angka) : angka;
-            if (isNaN(num)) return 'Rp 0';
+            if (isNaN(num)) return '0';
 
-            const sign = num < 0 ? '-' : '';
-            const absoluteAngka = Math.abs(num);
             const formatter = new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
+                // Hapus style currency untuk menghilangkan simbol Rp
                 minimumFractionDigits: 0
             });
-            // Hapus spasi setelah 'Rp' jika ada dan tambahkan tanda minus di depan jika negatif
-            return sign + formatter.format(absoluteAngka).trim();
+            // Hapus tanda minus jika angka positif, biarkan jika negatif
+            const formatted = formatter.format(Math.abs(num));
+            return num < 0 ? `-${formatted}` : formatted;
         }
 
         /** Mengubah string Rupiah menjadi angka (Parse Rupiah String to Number) */
         function parseRupiah(rupiahString) {
             // Hapus 'Rp', titik sebagai ribuan, dan koma desimal
+            // Karena sekarang tanpa Rp, hanya perlu hapus titik dan ganti koma ke titik (jika ada desimal, tapi di sini diasumsikan bilangan bulat)
             const cleanString = rupiahString.replace(/[^0-9,-]/g, '').replace(',', '.'); 
             const number = parseFloat(cleanString);
             return isNaN(number) ? 0 : number;
@@ -715,17 +714,17 @@
         /** Memperbarui tampilan saldo (Pemasukan, Pengeluaran, Saldo Akhir Kategori, Saldo Global) (Update All Balance Displays) */
         function updateSaldoDisplay() {
             // 1. Update Total Pemasukan
-            totalPemasukanEl.textContent = formatRupiah(totalIncomeValue);
+            totalPemasukanEl.textContent = formatAngka(totalIncomeValue);
             
             // 2. Update Total Pengeluaran
-            totalPengeluaranEl.textContent = formatRupiah(totalExpenseValue);
+            totalPengeluaranEl.textContent = formatAngka(totalExpenseValue);
 
             // 3. Update Saldo Akhir Kategori
-            akhirSaldoKategoriEl.textContent = formatRupiah(finalBalanceCategoryValue);
+            akhirSaldoKategoriEl.textContent = formatAngka(finalBalanceCategoryValue);
             akhirSaldoKategoriEl.style.color = finalBalanceCategoryValue < 0 ? 'var(--color-delete)' : 'var(--color-net-saldo)';
             
             // 4. Update Sisa Saldo Semua Kategori (Baru)
-            sisaSaldoSemuaKategoriEl.textContent = formatRupiah(globalFinalBalanceValue);
+            sisaSaldoSemuaKategoriEl.textContent = formatAngka(globalFinalBalanceValue);
             sisaSaldoSemuaKategoriEl.style.color = globalFinalBalanceValue < 0 ? 'var(--color-delete)' : 'var(--color-global-saldo)';
         }
 
@@ -749,13 +748,16 @@
             row.appendChild(createDataCell(keterangan, 'text-left')); 
 
             // Kolom 4: PEMASUKAN
-            row.appendChild(createDataCell(formatRupiah(pemasukan), 'text-right'));
+            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
+            row.appendChild(createDataCell(formatAngka(pemasukan), 'text-right'));
 
             // Kolom 5: PENGELUARAN
-            row.appendChild(createDataCell(formatRupiah(pengeluaran), 'text-right'));
+            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
+            row.appendChild(createDataCell(formatAngka(pengeluaran), 'text-right'));
 
             // Kolom 6: SALDO
-            row.appendChild(createDataCell(formatRupiah(saldo), 'text-right'));
+            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
+            row.appendChild(createDataCell(formatAngka(saldo), 'text-right'));
 
             // Kolom 7: AKSI (Edit, Hapus) - Dibuat sejajar menggunakan div.table-action-container
             const tdAksi = document.createElement('td');
@@ -833,8 +835,9 @@
             newRow.appendChild(pengeluaranTd);
 
             // 5. SALDO
+            // Menggunakan formatAngka() untuk menghilangkan simbol Rupiah
             const saldoTd = document.createElement('td');
-            saldoTd.textContent = formatRupiah(finalBalanceCategoryValue); // Saldo Akhir kategori sebelumnya
+            saldoTd.textContent = formatAngka(finalBalanceCategoryValue); // Saldo Akhir kategori sebelumnya
             saldoTd.classList.add('opacity-50', 'italic', 'text-right');
             newRow.appendChild(saldoTd);
 
@@ -891,6 +894,7 @@
             // Data saat ini (untuk mengisi nilai default input)
             const currentDate = dataCells[0].textContent; // Tanggal (DD Bulan YYYY)
             const currentKeterangan = dataCells[1].textContent; // Keterangan (Teks Bebas)
+            // Menggunakan parseRupiah, meskipun sekarang formatnya sudah tanpa Rp, parseRupiah tetap berfungsi untuk menghapus titik/koma ribuan
             const currentPemasukan = parseRupiah(dataCells[2].textContent); // Pemasukan
             const currentPengeluaran = parseRupiah(dataCells[3].textContent); // Pengeluaran
 
@@ -1107,7 +1111,8 @@
                 // Ambil semua sel data (kecuali yang tersembunyi)
                 const rowData = Array.from(row.querySelectorAll('td:not(.hidden-ts-col)'))
                                         .slice(0, 6) // Hanya 6 kolom data (Tanggal s.d. Saldo)
-                                        .map(td => td.textContent.trim().replace(formatRupiah(0).slice(0,-3), '')); // Hapus simbol Rupiah/spasi
+                                        // Hapus pemisah ribuan (titik) dan ganti koma desimal (jika ada) ke titik untuk format angka standar CSV
+                                        .map(td => td.textContent.trim().replace(/\./g, '').replace(',', '.')); 
 
                 if (rowData.length === 6) {
                      // Pastikan koma desimal diganti menjadi titik untuk standar CSV
