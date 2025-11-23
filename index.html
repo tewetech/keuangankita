@@ -1,52 +1,51 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- Favicon dari repository -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/tewetech/keuanganplampang2/refs/heads/main/favicon-uang.png">
     <meta charset="UTF-8">
+    <!-- Pengaturan viewport agar responsif di HP -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keuangan Kita | By Tewe Tech</title>
+    <title>Persiapan Wedding | By Tewe Tech</title>
     
+    <!-- Memuat Tailwind CSS (Framework Styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Memuat Font Google: Poppins dan JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
+    <!-- Memuat Ikon FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- CSS Kustom untuk Desain Spesifik -->
     <style>
-        /* ================================================= */
-        /* === Variabel dan Gaya Dasar Tema (Theme Variables and Base Styles) === */
-        /* ================================================= */
+        /* Variabel Warna dan Styling Dasar */
         :root {
-            /* Warna Dasar (Base Colors) */
-            --bg-primary: #f0f0f5; /* Latar Belakang Utama */
-            --bg-card: rgba(255, 255, 255, 0.5); /* Latar Belakang Kartu Glassmorphism */
-            --text-main: #333333; /* Teks Utama */
-            --text-subtle: #666666; /* Teks Sekunder/Subtil */
-            --accent-1: #08978b; /* Primer/Simpan (Hijau Teal) */
-            --accent-2: #ff6932; /* Hapus (Oranye) */
-            --accent-3: #08978B; /* Tab Aktif/Edit/Salin (Sama dengan accent-1) */
-            --border-color: rgba(0, 0, 0, 0.1); /* Warna Batas */
+            --bg-primary: #f0f0f5; 
+            --bg-card: rgba(255, 255, 255, 0.5); 
+            --text-main: #333333; 
+            --text-subtle: #666666; 
+            --accent-1: #08978b; /* Hijau Tosca Gelap */
+            --accent-2: #ff6932; /* Oranye Kemerahan */
+            --accent-3: #08978B; 
+            --border-color: rgba(0, 0, 0, 0.1); 
             
-            /* Dimensi (Dimensions) */
-            --glass-br: 8px; /* Radius Sudut Glassmorphism */
-            --font-size-base: 0.75rem; /* Ukuran Font Dasar */
+            --glass-br: 8px; /* Radius sudut elemen kaca */
+            --font-size-base: 0.75rem; 
             
-            /* Shadow & Warna Aksi (Shadow & Action Colors) */
-            --shadow-light: rgba(0, 0, 0, 0.1); /* Bayangan Ringan */
-            --color-delete: var(--accent-2); /* Warna Hapus */
-            --color-save: var(--accent-1); /* Warna Simpan */
-            --color-edit: var(--accent-3); /* Warna Edit */
+            --shadow-light: rgba(0, 0, 0, 0.1); 
+            --color-delete: var(--accent-2); 
+            --color-save: var(--accent-1); 
+            --color-edit: var(--accent-3); 
             
-            /* Warna khusus untuk Saldo */
-            --color-pemasukan: var(--accent-1); /* Warna Hijau untuk Pemasukan */
-            --color-pengeluaran: var(--accent-2); /* Warna Oranye untuk Pengeluaran */
-            --color-net-saldo: #007bff; /* Warna Biru untuk Saldo Akhir Kategori */
-            --color-global-saldo: #4a5568; /* Warna Abu-abu Tua untuk Saldo Global */
+            --color-pemasukan: var(--accent-1); 
+            --color-pengeluaran: var(--accent-2); 
+            --color-net-saldo: #007bff; 
+            --color-global-saldo: #4a5568; 
         }
 
-        /* --- Gaya Umum untuk body (General body Style) --- */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-primary);
@@ -56,7 +55,7 @@
             font-size: var(--font-size-base); 
         }
         
-        /* --- Kontainer utama (glass-card) - Glassmorphism style --- */
+        /* Efek Kaca (Glassmorphism) */
         .glass-card {
             background: var(--bg-card);
             backdrop-filter: blur(6px) saturate(180%); 
@@ -67,15 +66,14 @@
             border-radius: var(--glass-br);
         }
 
-        /* --- Kontainer Utama untuk batasan lebar (main-container) --- */
         .main-container {
-            max-width: 540px; 
+            max-width: 540px; /* Lebar maksimal agar enak dilihat di desktop */
             margin-left: auto;
             margin-right: auto;
             space-y: 0.8em; 
         }
         
-        /* --- Tombol Aksi Utama (btn-primary - untuk tombol Tambah Baru) --- */
+        /* Styling Tombol Utama */
         .btn-primary {
             background-color: var(--color-save); 
             color: white;
@@ -91,7 +89,7 @@
             transform: translateY(-1px);
         }
         
-        /* === Gaya Tombol Hapus (btn-delete - untuk Modal Hapus) === */
+        /* Styling Tombol Hapus */
         .btn-delete {
             background-color: var(--color-delete); 
             color: white;
@@ -105,16 +103,14 @@
             transform: translateY(-1px);
         }
 
-        /* --- Tombol Aksi Tabel (Edit/Hapus/Simpan/Batal Inline) --- */
-        /* Kontainer tombol aksi tabel, menggunakan flex untuk sejajar */
+        /* Kontainer Aksi Tabel (Edit/Hapus) */
         .table-action-container {
             display: flex;
-            gap: 0.25rem; /* Jarak antar tombol */
+            gap: 0.25rem; 
             justify-content: center;
             align-items: center;
         }
         .btn-table-action {
-            /* Membuat tombol lebih kecil dan merata */
             font-size: 0.6rem; 
             padding: 0.3rem; 
             width: 1.6rem; 
@@ -127,7 +123,7 @@
             transition: background-color 0.2s, transform 0.2s;
         }
 
-        /* --- Gaya Input dan Select (Input and Select Styles) --- */
+        /* Styling Input Form */
         .gaya-input-theme {
             border: 1px solid var(--border-color);
             border-radius: 5px; 
@@ -137,7 +133,7 @@
             background-color: #fcfcfc;
         }
 
-        /* --- Gaya Tabel (Table Styles) --- */
+        /* Styling Header Tabel */
         .data-table thead th {
             font-family: 'JetBrains Mono', monospace;
             color: var(--text-subtle);
@@ -152,6 +148,7 @@
             text-align: center;
         }
         
+        /* Styling Isi Tabel */
         .data-table tbody td {
             padding: 0.5rem 0.6rem; 
             font-size: 0.6rem; 
@@ -160,24 +157,22 @@
             text-align: left;
         }
         
-        /* --- Pengaturan Rata Tengah/Kanan untuk Isi Kolom (Column Content Alignment) --- */
-        /* CATATAN: Karena kolom SALDO dihapus, indeks harus direvisi */
-        .data-table tbody td:nth-child(2) { text-align: center; } /* TANGGAL */
-        .data-table tbody td:nth-child(3) { text-align: left; } /* KETERANGAN (Deskripsi) */
-        .data-table tbody td:nth-child(4), /* PEMASUKAN */
+        /* Penyesuaian Alignment Kolom */
+        .data-table tbody td:nth-child(2) { text-align: center; } /* Tanggal */
+        .data-table tbody td:nth-child(3) { text-align: left; }   /* Keterangan */
+        .data-table tbody td:nth-child(4), 
         .data-table tbody td:nth-child(5) { 
-            text-align: right; /* Rata Kanan untuk nominal uang */
+            text-align: right; /* Angka Rupiah rata kanan */
         }
-        /* Kolom SALDO (index 6) dihapus */
-        .data-table tbody td:nth-child(6) { text-align: center; } /* AKSI (Sekarang index 6) */
+        .data-table tbody td:nth-child(6) { text-align: center; } /* Aksi */
 
 
-        /* Mengganti baris ganjil/genap dengan gaya default agar lebih bersih */
+        /* Warna selang-seling baris tabel */
         .data-table tbody tr:nth-child(odd) { background-color: white; }
         .data-table tbody tr:nth-child(even) { background-color: var(--bg-primary); }
         .data-table tbody tr:hover { background-color: #e3f2fd; }
 
-        /* --- Gaya Scrollable Data (Scrollable Data Style) --- */
+        /* Area Scroll Tabel */
         .scrollable-data {
             max-height: 400px; 
             overflow-y: auto; 
@@ -185,7 +180,7 @@
             border-radius: var(--glass-br);
         }
 
-        /* --- Gaya Tombol Kategori (Mengganti Tombol Bulan) --- */
+        /* Tombol Kategori/Bulan */
         .btn-month-theme {
             padding: 0.4rem 0.6rem; 
             font-weight: 500; 
@@ -212,7 +207,7 @@
             color: white;
         }
 
-        /* --- Gaya Modal (Modal Loading/Hapus) --- */
+        /* Modal Pop-up */
         .modal {
             transition: all 0.3s ease-out;
             opacity: 0;
@@ -235,48 +230,40 @@
             transform: translateY(0);
         }
 
-        /* --- Gaya Baris Input/Edit (New Input/Edit Row Styles) --- */
+        /* Highlight baris input baru dan edit */
         #baris-input-baru {
-            background-color: #e6fffb !important; /* Warna latar belakang tema: Minty */
+            background-color: #e6fffb !important; 
         }
         .baris-edit-aktif {
-            background-color: #fffbe6 !important; /* Warna latar belakang tema: Kuning lembut */
+            background-color: #fffbe6 !important; 
         }
         
-        /* Gaya tambahan untuk menyembunyikan Kolom ID Transaksi (Hide Transaction ID Column) */
+        /* Sembunyikan kolom ID Transaksi */
         .hidden-ts-col {
             display: none;
         }
 
-        /* --- Gaya Khusus Kartu Saldo Revisi --- */
+        /* Item Saldo di Ringkasan */
         .balance-item p {
-            font-size: 0.55rem; /* Ukuran font label saldo */
+            font-size: 0.55rem; 
             font-weight: 500;
             margin-bottom: 0.1rem;
         }
 
-        /* REVISI: Perkecil Ukuran Font Nilai Saldo Kategori */
         .balance-item .balance-value {
-            font-size: 0.55rem; /* Ukuran font nilai saldo kategori */
+            font-size: 0.55rem; 
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
         }
         
-        /* Tambahan: Gaya khusus untuk Sisa Saldo Semua Kategori */
         #sisaSaldoSemuaKategori {
-            font-size: 0.99rem; /* Ukuran font lebih besar untuk saldo akhir global */
+            font-size: 0.99rem; 
             font-weight: 800;
             color: var(--color-global-saldo);
         }
         
-        /* Mengubah totalPemasukan dan totalPengeluaran kembali ke ukuran standar */
         #totalPemasukan { color: var(--color-pemasukan); }
         #totalPengeluaran { color: var(--color-pengeluaran); }
-        
-        /* Gaya untuk Saldo Akhir Kategori Ini */
-        #akhirSaldoKategori {
-            /* font-size diatur oleh .balance-value di atas */
-        }
         
     </style>
 </head>
@@ -284,41 +271,48 @@
 
     <div class="main-container mx-auto p-4 space-y-4"> 
         
+        <!-- HEADER -->
         <header class="text-center mb-6">
             <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--accent-1)]">
-                <i class="fas fa-chart-line mr-2"></i> KEUANGAN KITA
+                <i class="fas fa-chart-line mr-2"></i> PERSIAPAN WEDDING
             </h1>
             <p class="text-[var(--text-subtle)] mt-1 font-['JetBrains_Mono',_monospace] text-xs">
-                Keuangan Kita | By Tewe Tech V1.2
+                Persiapan Wedding | By Tewe Tech V1.4
             </p>
         </header>
 
+        <!-- AREA KARTU UTAMA -->
         <div class="glass-card p-4 mb-4">
+            <!-- Pilihan Kategori -->
             <div class="mb-4">
                 <p class="text-sm font-bold text-[var(--text-main)] mb-2">
                     <i class="fas fa-filter mr-2"></i> Pilih Kategori :
                 </p>
                 <div id="filterBulanContainer" class="grid grid-cols-2 md:grid-cols-3 gap-1.5">
-                    </div>
+                    <!-- Tombol Kategori akan dibuat lewat JS -->
+                </div>
             </div>
 
+            <!-- Ringkasan Saldo -->
             <div id="kartuSaldo" class="glass-card p-4 rounded-xl shadow-inner transition duration-300">
                 <p class="text-xs opacity-90 font-['JetBrains_Mono',_monospace] text-gray-500 mb-3 text-center">RINGKASAN KEUANGAN KATEGORI INI</p>
                 
                 <div class="grid grid-cols-3 gap-3 mb-4 text-center">
-                    
+                    <!-- Total Masuk -->
                     <div class="balance-item border-r border-gray-200 pr-2">
-                        <p class="text-[var(--color-pemasukan)]"><i class="fas fa-arrow-down-long mr-1"></i></p>
+                        <p class="text-[var(--color-pemasukan)]"><i class="fas fa-arrow-down-long mr-1"> M A S U K</i></p>
                         <p id="totalPemasukan" class="balance-value">0</p>
                     </div>
 
+                    <!-- Total Keluar -->
                     <div class="balance-item border-r border-gray-200 px-2">
-                        <p class="text-[var(--color-pengeluaran)]"><i class="fas fa-arrow-up-long mr-1"></i></p>
+                        <p class="text-[var(--color-pengeluaran)]"><i class="fas fa-arrow-up-long mr-1"> K E L U R</i></p>
                         <p id="totalPengeluaran" class="balance-value">0</p>
                     </div>
                     
+                    <!-- Sisa Saldo -->
                     <div class="balance-item pl-2">
-                        <p class="text-[var(--color-net-saldo)]"><i class="fas fa-balance-scale-left mr-1"></i></p>
+                        <p class="text-[var(--color-net-saldo)]"><i class="fas fa-balance-scale-left mr-1"> S A L D O</i></p>
                         <p id="akhirSaldoKategori" class="balance-value">0</p>
                     </div>
                 </div>
@@ -330,13 +324,15 @@
             </div>
         </div>
 
+        <!-- TABEL TRANSAKSI -->
         <div class="glass-card p-4 overflow-x-auto relative">
             
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-sm font-semibold text-[var(--text-main)]">
-    <i class="fas fa-receipt mr-2"></i> Rincian :
-</h2>
+                    <i class="fas fa-receipt mr-2"></i> Rincian :
+                </h2>
                 <div class="flex space-x-2">
+                    <!-- Tombol CSV -->
                     <button 
                         id="tombolSimpanCsv" 
                         class="btn-primary flex items-center justify-center text-xs rounded-full transform transition duration-200"
@@ -346,6 +342,7 @@
                     >
                         <i class="fas fa-download"></i>
                     </button>
+                    <!-- Tombol Tambah -->
                     <button 
                         id="tombolTambahBaru" 
                         class="btn-primary rounded-full flex items-center justify-center transform transition duration-200" 
@@ -378,6 +375,7 @@
         </div>
     </div>
 
+    <!-- MODAL LOADING (MEMUAT) -->
     <div id="lapisanMemuat" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="modal-content p-4 w-full max-w-xs">
             <div class="flex items-center justify-center space-x-2">
@@ -390,9 +388,10 @@
         </div>
     </div>
 
-    <div id="wadahToast" class="fixed bottom-4 right-4 space-y-2 z-50">
-    </div>
+    <!-- KONTAINER TOAST (NOTIFIKASI KECIL) -->
+    <div id="wadahToast" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
 
+    <!-- MODAL KONFIRMASI HAPUS -->
     <div id="modalHapus" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="modal-content p-4 w-11/12 max-w-xs">
             <h3 class="text-lg font-bold mb-3 flex items-center text-[var(--color-delete)]">
@@ -410,75 +409,78 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // ====================================================================
-        // KONFIGURASI APLIKASI (APPLICATION CONFIGURATION)
-        // ====================================================================
-        
-        // URL DEPLOYMENT Apps Script Anda (WAJIB DIGANTI dengan URL TERBARU Anda)
-        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBExQoFr8APOO95FzJGLe6ehemqG0IK4qYpQwLJogT3nORec5e1ONtLl5uyx_Ps4rs2A/exec"; // <-- WAJIB GANTI INI
+        // =========================================================================
+        // KONFIGURASI URL
+        // Ganti URL di bawah ini dengan URL Web App Google Apps Script Anda yang baru
+        // =========================================================================
+        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0X7YsP1DjDkw6TjnUa27s-bhtNePtkSgHolBcp7W4LBMZxX82mUTIeBfSynSIzjezGA/exec"; 
 
-        // DAFTAR KATEGORI BARU UNTUK FILTER UTAMA (Nama Sheet di Spreadsheet)
+        // Daftar Kategori (Ini akan menjadi nama Sheet di Spreadsheet)
         const CATEGORY_DATA = ["Mahar", "Mas Kawin", "Seserahan", "Souvenir", "Undangan", "Lain Lain"];
         
-        // Variabel Status Aplikasi
-        let isEditing = false; // Status apakah sedang dalam mode edit baris
-        let isAddingNew = false; // Status apakah sedang dalam mode tambah baru
-        let originalRowContent = null; // Menyimpan konten baris asli saat edit
-        let currentSelectedCategory = CATEGORY_DATA[0]; // Kategori/Sheet yang saat ini dipilih (default: Mahar)
+        // Variabel Global untuk Status Aplikasi
+        let isEditing = false;          // Apakah sedang mode edit?
+        let isAddingNew = false;        // Apakah sedang mode tambah baru?
+        let originalRowContent = null;  // Menyimpan isi baris sebelum diedit (untuk cancel)
+        let currentSelectedCategory = CATEGORY_DATA[0]; // Kategori aktif saat ini
         let transactionIdToDelete = null; // ID transaksi yang akan dihapus
         
-        // Variabel Saldo
-        let finalBalanceCategoryValue = 0; // Nilai Saldo Akhir Kategori
-        let totalIncomeValue = 0; // Nilai Total Pemasukan Kategori
-        let totalExpenseValue = 0; // Nilai Total Pengeluaran Kategori
-        let globalFinalBalanceValue = 0; // Nilai Sisa Saldo Semua Kategori
+        // Variabel untuk Menyimpan Nilai Saldo
+        let finalBalanceCategoryValue = 0; 
+        let totalIncomeValue = 0; 
+        let totalExpenseValue = 0; 
+        let globalFinalBalanceValue = 0; 
         
-        // Referensi DOM
-        const filterBulanContainer = document.getElementById('filterBulanContainer'); // Kontainer tombol Kategori
-        const tabelDataTransaksi = document.getElementById('tabelDataTransaksi');     // Body tabel transaksi
-        const lapisanMemuat = document.getElementById('lapisanMemuat');             // Modal loading
+        // Referensi Elemen DOM (HTML)
+        const filterBulanContainer = document.getElementById('filterBulanContainer'); 
+        const tabelDataTransaksi = document.getElementById('tabelDataTransaksi');     
+        const lapisanMemuat = document.getElementById('lapisanMemuat');             
         
-        // Referensi DOM Saldo
-        const akhirSaldoKategoriEl = document.getElementById('akhirSaldoKategori'); // Elemen saldo akhir kategori
-        const totalPemasukanEl = document.getElementById('totalPemasukan');         // Elemen total pemasukan
-        const totalPengeluaranEl = document.getElementById('totalPengeluaran');     // Elemen total pengeluaran
-        const sisaSaldoSemuaKategoriEl = document.getElementById('sisaSaldoSemuaKategori'); // Elemen saldo akhir global
+        const akhirSaldoKategoriEl = document.getElementById('akhirSaldoKategori'); 
+        const totalPemasukanEl = document.getElementById('totalPemasukan');         
+        const totalPengeluaranEl = document.getElementById('totalPengeluaran');     
+        const sisaSaldoSemuaKategoriEl = document.getElementById('sisaSaldoSemuaKategori'); 
         
-        const tombolTambahBaru = document.getElementById('tombolTambahBaru');         // Tombol tambah baru
-        const wadahToast = document.getElementById('wadahToast');                     // Wadah notifikasi toast
-        const modalHapus = document.getElementById('modalHapus');                     // Modal konfirmasi hapus
-        const tombolKonfirmasiHapus = document.getElementById('tombolKonfirmasiHapus'); // Tombol konfirmasi hapus di modal
-        const tombolBatalHapus = document.getElementById('tombolBatalHapus');           // Tombol batal hapus di modal
-        const tombolSimpanCsv = document.getElementById('tombolSimpanCsv');         // Tombol export CSV
+        const tombolTambahBaru = document.getElementById('tombolTambahBaru');         
+        const wadahToast = document.getElementById('wadahToast');                     
+        const modalHapus = document.getElementById('modalHapus');                     
+        const tombolKonfirmasiHapus = document.getElementById('tombolKonfirmasiHapus'); 
+        const tombolBatalHapus = document.getElementById('tombolBatalHapus');           
+        const tombolSimpanCsv = document.getElementById('tombolSimpanCsv');         
 
-        // ====================================================================
-        // FUNGSI UTILITY & API CALLS (HELPER FUNCTIONS)
-        // ====================================================================
-
-        /** Mengirim data ke Google Apps Script (Apps Script Communication) */
+        // =========================================================================
+        // FUNGSI KOMUNIKASI KE GOOGLE SHEETS (BACKEND)
+        // =========================================================================
         async function postToGS(data) {
+            // Cek apakah URL Script sudah diisi
+            if (GOOGLE_APPS_SCRIPT_URL.includes("MASUKKAN_URL")) {
+                showToast("Harap atur URL Google Apps Script di dalam kode HTML!", "error");
+                return;
+            }
+
             showLoading(true);
             const url = GOOGLE_APPS_SCRIPT_URL; 
-            const MAX_RETRIES = 3; // Maksimal percobaan ulang
+            const MAX_RETRIES = 3; // Jumlah percobaan maksimal jika gagal
 
             for (let i = 0; i < MAX_RETRIES; i++) {
                 try {
                     const formData = new FormData();
                     for (const key in data) {
-                        // Konversi angka ke string untuk FormData
+                        // Konversi angka ke string agar aman dikirim
                         formData.append(key, typeof data[key] === 'number' ? String(data[key]) : data[key]);
                     }
 
+                    // Kirim data menggunakan Fetch API
                     const response = await fetch(url, {
                         method: 'POST',
                         body: formData,
                         redirect: 'follow',
-                        mode: 'cors'
+                        mode: 'cors' // Penting untuk akses lintas domain
                     });
 
                     if (!response.ok) {
-                         // Tangani response non-200 OK
                         throw new Error(`Permintaan HTTP gagal dengan status: ${response.status}`);
                     }
                     
@@ -492,34 +494,37 @@
 
                 } catch (error) {
                     console.error("Kesalahan saat menghubungi Apps Script:", error);
+                    // Jika percobaan terakhir masih gagal, lempar error
                     if (i === MAX_RETRIES - 1) {
                         showLoading(false);
                         throw new Error(`Gagal memproses data setelah ${MAX_RETRIES} percobaan: ${error.message}`);
                     }
-                    // Eksponensial backoff
+                    // Tunggu sebentar sebelum mencoba lagi (Exponential Backoff)
                     const delay = Math.pow(2, i) * 1000;
                     await new Promise(resolve => setTimeout(resolve, delay)); 
                 }
             }
         }
 
-        /** Mengambil sisa saldo semua kategori dari Apps Script (NEW FUNCTION) */
+        // Mengambil Saldo Global (Total Semua Kategori)
         async function fetchGlobalBalance() {
              try {
-                // Menggunakan aksi 'READ_ALL_BALANCE' yang baru di Apps Script
                 const result = await postToGS({ action: 'READ_ALL_BALANCE', month: currentSelectedCategory }); 
                 globalFinalBalanceValue = parseFloat(result.totalSaldo) || 0;
                 updateSaldoDisplay();
             } catch (error) {
                 console.error("Gagal memuat saldo global:", error);
-                globalFinalBalanceValue = 0; // Reset jika gagal
+                globalFinalBalanceValue = 0; 
                 updateSaldoDisplay();
-                showToast(`Gagal memuat saldo global: ${error.message}`, 'error');
+                // Jangan tampilkan toast error untuk saldo global agar tidak mengganggu UX
             }
         }
 
-
-        /** Menampilkan notifikasi toast (Show Toast Notification) */
+        // =========================================================================
+        // FUNGSI UTILITAS (UI & FORMATTING)
+        // =========================================================================
+        
+        // Menampilkan notifikasi (Toast)
         function showToast(message, type) {
             const container = wadahToast;
             let bgColor;
@@ -528,8 +533,8 @@
             if (type === 'success') {
                 bgColor = 'bg-[var(--accent-1)]'; icon = 'fa-check-circle';
             } else if (type === 'accent-3') {
-                bgColor = 'bg-[#3b82f6]'; icon = 'fa-info-circle';
-            } else { // error
+                bgColor = 'bg-[#08978b]'; icon = 'fa-info-circle';
+            } else { 
                 bgColor = 'bg-[var(--accent-2)]'; icon = 'fa-exclamation-circle';
             }
 
@@ -538,56 +543,51 @@
             toast.innerHTML = `<i class="fas ${icon} text-lg"></i> <div> <p class="font-bold">${type === 'success' ? 'BERHASIL' : (type === 'accent-3' ? 'PERHATIAN' : 'GAGAL')}</p> <p class="mt-0.5 text-xs">${message}</p> </div>`;
             container.appendChild(toast);
 
-            // Tampilkan toast
+            // Animasi masuk
             setTimeout(() => {
                 toast.classList.remove('translate-y-2', 'opacity-0');
             }, 50); 
             
-            // Sembunyikan dan hapus toast setelah 5 detik
+            // Animasi keluar dan hapus elemen setelah 5 detik
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => { toast.remove(); }, 500);
             }, 5000);
         }
 
-        /** Menampilkan atau menyembunyikan lapisan memuat (Show/Hide Loading Overlay) */
+        // Menampilkan/Menyembunyikan Loading Spinner
         function showLoading(state) {
             lapisanMemuat.classList.toggle('hidden', !state);
             lapisanMemuat.classList.toggle('modal-open', state);
         }
 
-        /** Format angka menjadi format Rupiah tanpa simbol 'Rp' (Format Number without Rupiah Symbol) */
+        // Format Angka ke Rupiah (tanpa simbol Rp untuk keringkasan)
         function formatAngka(angka) {
             if (typeof angka !== 'number' && typeof angka !== 'string') return '0';
             const num = typeof angka === 'string' ? parseFloat(angka) : angka;
             if (isNaN(num)) return '0';
 
             const formatter = new Intl.NumberFormat('id-ID', {
-                // Hapus style currency untuk menghilangkan simbol Rp
                 minimumFractionDigits: 0
             });
-            // Hapus tanda minus jika angka positif, biarkan jika negatif
             const formatted = formatter.format(Math.abs(num));
             return num < 0 ? `-${formatted}` : formatted;
         }
 
-        /** Mengubah string Rupiah menjadi angka (Parse Rupiah String to Number) */
+        // Mengubah format Rupiah string kembali ke angka murni
         function parseRupiah(rupiahString) {
-            // Hapus karakter non-digit kecuali tanda minus, koma, dan titik
             const cleanString = rupiahString.replace(/[^0-9,-]/g, '').replace(',', '.'); 
             const number = parseFloat(cleanString);
             return isNaN(number) ? 0 : number;
         }
 
-        /** Mengubah format tanggal dari YYYY-MM-DD menjadi DD Bulan YYYY (Format Date to Indonesian) */
+        // Format Tanggal: YYYY-MM-DD -> 17 Agustus 2024
         function formatDateToIndonesian(dateString) {
             if (!dateString) return '';
             try {
-                // Asumsi dateString sudah dalam format YYYY-MM-DD dari spreadsheet
                 const parts = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
                 if (!parts) return dateString;
 
-                // Membuat objek Date dengan komponen terpisah untuk menghindari pergeseran zona waktu
                 const date = new Date(parts[1], parts[2] - 1, parts[3]);
                 
                 return date.toLocaleDateString('id-ID', { 
@@ -600,14 +600,24 @@
             }
         }
 
-        /** Mengubah format tanggal dari DD Bulan YYYY menjadi YYYY-MM-DD (untuk input date) (Convert to YYYY-MM-DD) */
+        // Format Tanggal Balik: 17 Agustus 2024 -> YYYY-MM-DD (untuk input date)
         function convertToYyyyMmDd(indonesianDateString) {
+            // Fungsi sederhana, lebih baik gunakan data asli dari database jika memungkinkan
+            // Karena parsing "17 Agustus 2024" secara manual cukup kompleks
+            // Kita akan mencoba parsing standar JS
             try {
-                // Parsing format Indonesia (contoh: 1 Agustus 2025)
-                const date = new Date(indonesianDateString.replace(/\s/g, ' '));
-                if (isNaN(date)) {
-                    return '';
-                }
+                // Trik: Ganti nama bulan Indonesia ke Inggris untuk Date.parse
+                const monthsIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                const monthsEng = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                
+                let dateStr = indonesianDateString;
+                monthsIndo.forEach((bln, idx) => {
+                    dateStr = dateStr.replace(bln, monthsEng[idx]);
+                });
+
+                const date = new Date(dateStr);
+                if (isNaN(date.getTime())) return '';
+                
                 const year = date.getFullYear();
                 const month = String(date.getMonth() + 1).padStart(2, '0');
                 const day = String(date.getDate()).padStart(2, '0');
@@ -617,11 +627,10 @@
             }
         }
         
-        /** Helper: Membuat elemen input/date/number/text (Create Input Element) */
+        // Membuat Elemen Input Dinamis (Text/Number/Date)
         function createInput(type, value, placeholder = '') {
             const input = document.createElement('input');
             
-            // Set input type dan gaya dasar
             if (type === 'number') {
                 input.type = 'number';
                 input.value = value || 0;
@@ -632,7 +641,6 @@
                 input.value = value || '';
                 input.className = 'gaya-input-theme w-full text-center';
             } else { 
-                // Default ke input teks (untuk Keterangan/Deskripsi)
                 input.type = 'text';
                 input.value = value || '';
                 input.className = 'gaya-input-theme w-full text-left'; 
@@ -641,69 +649,60 @@
             return input;
         }
 
+        // =========================================================================
+        // FUNGSI UTAMA LOGIKA APLIKASI
+        // =========================================================================
 
-        // ====================================================================
-        // FUNGSI LOGIKA UTAMA (CRUD & UI LOGIC)
-        // ====================================================================
-
-        /** Mengambil dan menampilkan data transaksi untuk KATEGORI/SHEET yang dipilih (Fetch and Display Data) */
+        // Mengambil Data dari Spreadsheet berdasarkan Kategori
         async function fetchData(category = currentSelectedCategory) {
-            currentSelectedCategory = category; // Simpan kategori baru
+            currentSelectedCategory = category; 
             showLoading(true);
             try {
-                // Menggunakan parameter 'month' di Apps Script, namun isinya adalah nama kategori/sheet
+                // Panggil API 'READ_DATA'
                 const result = await postToGS({ action: 'READ_DATA', month: category });
                 
-                // Hapus semua baris yang sudah ada
-                tabelDataTransaksi.innerHTML = ''; 
+                tabelDataTransaksi.innerHTML = ''; // Kosongkan tabel
                 
                 const data = result.data || [];
                 
-                // Variabel lokal untuk menghitung total
                 let tempIncome = 0;
                 let tempExpense = 0;
-
-                // Hitung jumlah kolom untuk colspan pada pesan "Tidak ada data"
-                // 1 (ID tersembunyi) + 1 (Tanggal) + 1 (Keterangan) + 1 (Pemasukan) + 1 (Pengeluaran) + 1 (Aksi) = 6 kolom
                 const colspanValue = 6; 
 
                 if (data.length === 0) {
-                    // Tampilkan pesan "Tidak ada data"
+                    // Tampilkan pesan jika data kosong
                     const noDataRow = document.createElement('tr');
                     noDataRow.innerHTML = `<td colspan="${colspanValue}" class="text-center py-4 text-[var(--text-subtle)]">Tidak ada data transaksi untuk kategori ${category}.</td>`;
                     tabelDataTransaksi.appendChild(noDataRow);
                     
-                    // Reset semua saldo kategori
                     finalBalanceCategoryValue = 0; 
                     totalIncomeValue = 0;
                     totalExpenseValue = 0;
                 } else {
-                    // Render data ke tabel dan hitung total pemasukan/pengeluaran
+                    // Loop data dan masukkan ke tabel
                     data.forEach(rowData => {
-                        // rowData: [ID, Tanggal, Keterangan, Pemasukan, Pengeluaran, Saldo]
                         tabelDataTransaksi.appendChild(createTableRow(rowData));
                         
-                        // rowData index 3: pemasukan, index 4: pengeluaran
+                        // Akumulasi total pemasukan/pengeluaran
                         tempIncome += parseFloat(rowData[3]) || 0;
                         tempExpense += parseFloat(rowData[4]) || 0;
                     });
                     
-                    // Ambil saldo akhir kategori dari baris terakhir (index 5)
+                    // Saldo akhir diambil dari baris terakhir kolom saldo (index 5)
                     finalBalanceCategoryValue = parseFloat(data[data.length - 1][5]) || 0; 
                     totalIncomeValue = tempIncome;
                     totalExpenseValue = tempExpense;
                 }
                 
-                // Muat ulang Saldo Global
+                // Perbarui saldo global juga
                 await fetchGlobalBalance(); 
                 
                 updateSaldoDisplay();
-                updateCategoryButtons(category); // Perbarui tampilan tombol kategori
+                updateCategoryButtons(category); 
 
             } catch (error) {
                 showToast(`Gagal memuat data: ${error.message}`, 'error');
                 tabelDataTransaksi.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">${error.message}</td></tr>`;
-                // Reset saldo pada error
                 finalBalanceCategoryValue = 0;
                 totalIncomeValue = 0;
                 totalExpenseValue = 0;
@@ -715,54 +714,40 @@
             }
         }
 
-        /** Memperbarui tampilan saldo (Pemasukan, Pengeluaran, Saldo Akhir Kategori, Saldo Global) (Update All Balance Displays) */
+        // Memperbarui Tampilan Angka Saldo di Kartu Atas
         function updateSaldoDisplay() {
-            // 1. Update Total Pemasukan
             totalPemasukanEl.textContent = formatAngka(totalIncomeValue);
-            
-            // 2. Update Total Pengeluaran
             totalPengeluaranEl.textContent = formatAngka(totalExpenseValue);
 
-            // 3. Update Saldo Akhir Kategori
             akhirSaldoKategoriEl.textContent = formatAngka(finalBalanceCategoryValue);
-            // Ganti warna jika saldo negatif
+            // Warna merah jika minus, biru jika plus
             akhirSaldoKategoriEl.style.color = finalBalanceCategoryValue < 0 ? 'var(--color-delete)' : 'var(--color-net-saldo)';
             
-            // 4. Update Sisa Saldo Semua Kategori
             sisaSaldoSemuaKategoriEl.textContent = formatAngka(globalFinalBalanceValue);
-            // Ganti warna jika saldo negatif
             sisaSaldoSemuaKategoriEl.style.color = globalFinalBalanceValue < 0 ? 'var(--color-delete)' : 'var(--color-global-saldo)';
         }
 
-        /** Membuat satu baris tabel (<tr>) dari data transaksi (Create Table Row) */
+        // Membuat Baris Tabel HTML dari Data
         function createTableRow(rowData) {
-            // rowData: [id (0), tanggal (1), keterangan (2), pemasukan (3), pengeluaran (4), saldo (5)]
+            // rowData format: [id, tanggal, keterangan, pemasukan, pengeluaran, saldo]
             const [id, tanggal, keterangan, pemasukan, pengeluaran, saldo] = rowData;
 
             const row = document.createElement('tr');
             row.dataset.id = id;
 
-            // Kolom 1: ID Transaksi (Tersembunyi) - Index 0
+            // Kolom ID (Tersembunyi)
             const tdId = document.createElement('td');
             tdId.className = 'hidden-ts-col';
             tdId.textContent = id;
             row.appendChild(tdId);
 
-            // Kolom 2: TANGGAL - Index 1
+            // Kolom Data
             row.appendChild(createDataCell(formatDateToIndonesian(tanggal), 'text-center'));
-
-            // Kolom 3: KETERANGAN - Index 2
             row.appendChild(createDataCell(keterangan, 'text-left')); 
-
-            // Kolom 4: PEMASUKAN - Index 3
             row.appendChild(createDataCell(formatAngka(pemasukan), 'text-right'));
-
-            // Kolom 5: PENGELUARAN - Index 4
             row.appendChild(createDataCell(formatAngka(pengeluaran), 'text-right'));
 
-            // **KOLOM SALDO (Index 5) DIHILANGKAN DARI TAMPILAN BARIS**
-
-            // Kolom 6: AKSI (Edit, Hapus) - Index 5 (Karena Saldo dihapus)
+            // Kolom Aksi
             const tdAksi = document.createElement('td');
             tdAksi.className = 'text-center';
             tdAksi.innerHTML = `
@@ -788,7 +773,6 @@
             return row;
         }
 
-        /** Helper untuk membuat sel data biasa (Create Standard Data Cell) */
         function createDataCell(content, extraClass = '') {
             const td = document.createElement('td');
             td.textContent = content;
@@ -796,7 +780,7 @@
             return td;
         }
 
-        /** Menambahkan baris input baru di awal tabel untuk transaksi baru. (Add New Input Row) */
+        // Memulai Mode Tambah Data Baru
         function addRowToTable() {
             if (isAddingNew || isEditing) {
                 showToast("Selesaikan input/edit yang aktif terlebih dahulu.", 'accent-3');
@@ -809,37 +793,34 @@
             newRow.id = 'baris-input-baru';
             newRow.dataset.id = 'NEW';
 
-            // Td ID (tersembunyi) - Index 0
             newRow.innerHTML += '<td class="hidden-ts-col">NEW</td>';
 
-            // 1. TANGGAL - Index 1
+            // Input Tanggal (Default hari ini)
             const tanggalTd = document.createElement('td');
             const today = new Date().toISOString().split('T')[0];
             const tanggalInput = createInput('date', today);
             tanggalTd.appendChild(tanggalInput);
             newRow.appendChild(tanggalTd);
 
-            // 2. KETERANGAN (Input Teks Bebas) - Index 2
+            // Input Keterangan
             const keteranganTd = document.createElement('td');
             const keteranganInput = createInput('text', '', 'Contoh: Emas 10 gram'); 
             keteranganTd.appendChild(keteranganInput);
             newRow.appendChild(keteranganTd);
 
-            // 3. PEMASUKAN - Index 3
+            // Input Pemasukan
             const pemasukanTd = document.createElement('td');
             const pemasukanInput = createInput('number', 0, 'Pemasukan');
             pemasukanTd.appendChild(pemasukanInput);
             newRow.appendChild(pemasukanTd);
 
-            // 4. PENGELUARAN - Index 4
+            // Input Pengeluaran
             const pengeluaranTd = document.createElement('td');
             const pengeluaranInput = createInput('number', 0, 'Pengeluaran');
             pengeluaranTd.appendChild(pengeluaranInput);
             newRow.appendChild(pengeluaranTd);
-
-            // **KOLOM SALDO ASLI DIHAPUS, JADI TIDAK PERLU SEL SALDO BARU**
             
-            // 5. AKSI - Index 5
+            // Tombol Simpan/Batal
             const aksiTd = document.createElement('td');
             aksiTd.className = 'text-center';
             aksiTd.innerHTML = `
@@ -862,12 +843,12 @@
             `;
             newRow.appendChild(aksiTd);
 
-            // Sisipkan baris baru di awal tbody
+            // Masukkan baris baru di paling atas tabel
             tabelDataTransaksi.insertBefore(newRow, tabelDataTransaksi.firstChild);
             tanggalInput.focus();
         }
 
-        /** Mengaktifkan mode edit pada baris transaksi tertentu. (Start Edit Mode) */
+        // Memulai Mode Edit
         function startEdit(id) {
             if (isEditing || isAddingNew) {
                 showToast("Selesaikan input/edit yang aktif terlebih dahulu.", 'accent-3');
@@ -879,49 +860,36 @@
             if (!row) return;
 
             row.classList.add('baris-edit-aktif');
+            originalRowContent = row.innerHTML; // Simpan konten lama
 
-            // Simpan konten asli
-            originalRowContent = row.innerHTML;
-
-            // Ambil sel data (kecuali ID tersembunyi)
-            // Total ada 6 sel: [Tanggal, Keterangan, Pemasukan, Pengeluaran, Aksi] + (Saldo yang dihilangkan secara visual, tapi perlu dihitung selnya)
-            // *PENTING*: Saat `createTableRow` dibuat, total ada 6 sel yang ditampilkan (ID tersembunyi, Tanggal, Keterangan, Pemasukan, Pengeluaran, Aksi).
-            // Jadi, `row.querySelectorAll('td')` akan menghasilkan 6 elemen.
             const cells = Array.from(row.querySelectorAll('td'));
-            const idCell = cells[0]; // ID tersembunyi
-            const dataCells = cells.slice(1, 5); // [Tanggal, Keterangan, Pemasukan, Pengeluaran]
-            const aksiCell = cells[5]; // Kolom Aksi
+            const dataCells = cells.slice(1, 5); // Ambil sel data saja
+            const aksiCell = cells[5]; 
 
-            
-            // Data saat ini (untuk mengisi nilai default input)
-            const currentDate = dataCells[0].textContent; // Tanggal (DD Bulan YYYY)
-            const currentKeterangan = dataCells[1].textContent; // Keterangan (Teks Bebas)
-            const currentPemasukan = parseRupiah(dataCells[2].textContent); // Pemasukan
-            const currentPengeluaran = parseRupiah(dataCells[3].textContent); // Pengeluaran
+            // Ambil nilai lama
+            const currentDate = dataCells[0].textContent; 
+            const currentKeterangan = dataCells[1].textContent; 
+            const currentPemasukan = parseRupiah(dataCells[2].textContent); 
+            const currentPengeluaran = parseRupiah(dataCells[3].textContent); 
 
-            // 1. TANGGAL
+            // Ganti teks dengan Input
             const tanggalInput = createInput('date', convertToYyyyMmDd(currentDate));
             dataCells[0].textContent = '';
             dataCells[0].appendChild(tanggalInput);
 
-            // 2. KETERANGAN (Input Teks Bebas)
             const keteranganInput = createInput('text', currentKeterangan);
             dataCells[1].textContent = '';
             dataCells[1].appendChild(keteranganInput);
 
-            // 3. PEMASUKAN
             const pemasukanInput = createInput('number', currentPemasukan);
             dataCells[2].textContent = '';
             dataCells[2].appendChild(pemasukanInput);
 
-            // 4. PENGELUARAN
             const pengeluaranInput = createInput('number', currentPengeluaran);
             dataCells[3].textContent = '';
             dataCells[3].appendChild(pengeluaranInput);
 
-            // **KOLOM SALDO DIHAPUS DARI TAMPILAN, JADI TIDAK PERLU DIPROSES DI SINI**
-
-            // 5. AKSI - Ganti dengan Simpan & Batal
+            // Ganti tombol aksi
             aksiCell.innerHTML = `
                 <div class="table-action-container">
                     <button
@@ -943,22 +911,16 @@
             tanggalInput.focus();
         }
 
-
-        /** Menyimpan baris input baru ke Spreadsheet (ADD_TRANSACTION) */
+        // Simpan Data Baru ke Spreadsheet
         async function saveNewData() {
             const row = document.getElementById('baris-input-baru');
             if (!row) return;
             
-            // Ambil nilai dari input/select
             const tanggal = row.querySelector('input[type="date"]').value;
-            // Keterangan: input teks ada di td ke-3
             const keterangan = row.querySelector('td:nth-child(3) input').value; 
-            // Pemasukan: input number pertama
             const pemasukan = parseFloat(row.querySelectorAll('input[type="number"]')[0].value) || 0;
-            // Pengeluaran: input number kedua
             const pengeluaran = parseFloat(row.querySelectorAll('input[type="number"]')[1].value) || 0;
             
-            // Cek validitas data
             if (!tanggal || !keterangan) {
                 showToast("Harap isi Tanggal dan Keterangan (deskripsi transaksi).", 'accent-3');
                 return;
@@ -967,39 +929,34 @@
             try {
                 const dataToSend = {
                     action: 'ADD_TRANSACTION',
-                    month: currentSelectedCategory, // Mengirim nama Kategori sebagai nama Sheet
+                    month: currentSelectedCategory, 
                     tanggal,
                     keterangan,
                     pemasukan,
-                    pengeluaran,
-                    sisa_saldo: 0 // Saldo dihitung di server
+                    pengeluaran
                 };
 
                 await postToGS(dataToSend);
                 showToast("Transaksi berhasil ditambahkan!", 'success');
                 isAddingNew = false;
-                fetchData(currentSelectedCategory); // Muat ulang data & saldo global
+                fetchData(currentSelectedCategory); 
             } catch (error) {
                 showToast(`Gagal menambahkan: ${error.message}`, 'error');
             }
         }
 
-        /** Memperbarui baris yang diedit di Spreadsheet (UPDATE_TRANSACTION) */
+        // Update Data ke Spreadsheet
         async function updateData(id) {
             const row = document.querySelector(`tr[data-id="${id}"]`);
             if (!row) return;
 
-            // Ambil nilai dari input/select
             const tanggal = row.querySelector('input[type="date"]').value;
-            // Keterangan: input teks ada di td ke-3
             const keterangan = row.querySelector('td:nth-child(3) input').value; 
-            // Pemasukan: input number pertama
             const pemasukan = parseFloat(row.querySelectorAll('input[type="number"]')[0].value) || 0;
-            // Pengeluaran: input number kedua
             const pengeluaran = parseFloat(row.querySelectorAll('input[type="number"]')[1].value) || 0;
 
             if (!tanggal || !keterangan) {
-                showToast("Harap isi Tanggal dan Keterangan (deskripsi transaksi).", 'accent-3');
+                showToast("Harap isi Tanggal dan Keterangan.", 'accent-3');
                 return;
             }
 
@@ -1007,24 +964,23 @@
                 const dataToSend = {
                     action: 'UPDATE_TRANSACTION',
                     id: id,
-                    month: currentSelectedCategory, // Mengirim nama Kategori sebagai nama Sheet
+                    month: currentSelectedCategory, 
                     tanggal,
                     keterangan,
                     pemasukan,
-                    pengeluaran,
-                    sisa_saldo: 0 // Saldo dihitung ulang di server
+                    pengeluaran
                 };
 
                 await postToGS(dataToSend);
                 showToast("Transaksi berhasil diperbarui!", 'success');
                 isEditing = false;
-                fetchData(currentSelectedCategory); // Muat ulang data & saldo global
+                fetchData(currentSelectedCategory); 
             } catch (error) {
                 showToast(`Gagal memperbarui: ${error.message}`, 'error');
             }
         }
 
-        /** Menampilkan modal konfirmasi hapus (Show Delete Confirmation Modal) */
+        // Konfirmasi Hapus
         function showDeleteConfirmation(id) {
             if (isEditing || isAddingNew) {
                 showToast("Selesaikan input/edit yang aktif terlebih dahulu.", 'accent-3');
@@ -1035,7 +991,7 @@
             modalHapus.classList.add('modal-open');
         }
 
-        /** Menghapus transaksi (DELETE_TRANSACTION) */
+        // Eksekusi Hapus
         async function deleteTransaction() {
             modalHapus.classList.remove('modal-open');
             modalHapus.classList.add('hidden');
@@ -1046,25 +1002,23 @@
                 await postToGS({ 
                     action: 'DELETE_TRANSACTION', 
                     id: transactionIdToDelete,
-                    month: currentSelectedCategory // Mengirim nama Kategori sebagai nama Sheet
+                    month: currentSelectedCategory 
                 });
                 showToast("Transaksi berhasil dihapus!", 'success');
                 transactionIdToDelete = null;
-                fetchData(currentSelectedCategory); // Muat ulang data & saldo global
+                fetchData(currentSelectedCategory); 
             } catch (error) {
                 showToast(`Gagal menghapus: ${error.message}`, 'error');
             }
         }
 
-        /** Membatalkan mode edit atau input baru (Cancel Edit or New Input Action) */
+        // Batal Input/Edit
         function cancelAction(id) {
             if (id === 'NEW') {
-                // Hapus baris input baru
                 const newRow = document.getElementById('baris-input-baru');
                 if (newRow) newRow.remove();
                 isAddingNew = false;
             } else {
-                // Batalkan edit, kembalikan konten asli
                 const row = document.querySelector(`tr[data-id="${id}"]`);
                 if (row && originalRowContent) {
                     row.innerHTML = originalRowContent;
@@ -1075,57 +1029,38 @@
             }
         }
 
-
-        // ====================================================================
-        // FUNGSI INISIALISASI & UI (INITIALIZATION & UI FUNCTIONS)
-        // ====================================================================
-
-        /** Membuat tombol Kategori (Create Category Button) */
+        // Membuat Tombol Kategori
         function createCategoryButton(categoryName) {
             const button = document.createElement('button');
-            button.textContent = categoryName; // Tampilkan nama kategori penuh
+            button.textContent = categoryName; 
             button.className = 'btn-month-theme text-xs'; 
             button.onclick = () => fetchData(categoryName);
             return button;
         }
 
-        /** Memperbarui tampilan tombol Kategori yang aktif (Update Active Category Button) */
+        // Highlight Tombol Kategori Aktif
         function updateCategoryButtons(activeCategory) {
             Array.from(filterBulanContainer.children).forEach(btn => {
                 btn.classList.toggle('aktif', btn.textContent === activeCategory);
             });
         }
         
-        /** Export data tabel ke format CSV (Export Table to CSV) */
+        // Fitur Export ke CSV
         function exportToCSV() {
             const table = document.querySelector('.data-table');
             if (!table) return;
 
             let csv = [];
-            
-            // Ambil Header (Hanya yang tidak tersembunyi)
+            // Ambil header tabel
             const headers = Array.from(table.querySelectorAll('thead th:not(.hidden-ts-col)'))
                                 .map(th => th.textContent.trim());
-            // Hapus header 'AKSI' dari CSV
-            const dataHeaders = headers.slice(0, headers.length - 1); // [TANGGAL, KETERANGAN, PEMASUKAN, PENGELUARAN]
-            // Tambahkan header 'SALDO' secara manual karena di tampilan dihilangkan
+            const dataHeaders = headers.slice(0, headers.length - 1); 
             dataHeaders.push('SALDO');
             csv.push(dataHeaders.join(';')); 
             
-            // Ambil Data Baris
-            // Data transaksi dari server berisi [id(0), tanggal(1), keterangan(2), pemasukan(3), pengeluaran(4), saldo(5)]
-            // Kita perlu mengambil semua data mentah kecuali ID, lalu format untuk CSV.
-            // Sayangnya, data transaksi mentah tidak tersedia di sini.
-            // SOLUSI: Kirim permintaan READ_DATA lagi tanpa merender UI untuk mendapatkan data mentah
-            
-            // NOTE: Karena permintaan asinkron di dalam fungsi sinkron,
-            // dan untuk menjaga agar fungsi exportToCSV tetap sinkron seperti aslinya, 
-            // kita akan menggunakan data yang sudah ada di tabel (walaupun Saldo tidak ada)
-            // ATAU membuat permintaan asinkron baru. Kita pilih membuat permintaan asinkron:
-            
-            // Tambahkan loading overlay
             showLoading(true);
 
+            // Ambil data mentah dari server agar akurat
             postToGS({ action: 'READ_DATA', month: currentSelectedCategory })
                 .then(result => {
                     const rawData = result.data || [];
@@ -1136,25 +1071,20 @@
                         return;
                     }
 
-                    // rawData: [id(0), tanggal(1), keterangan(2), pemasukan(3), pengeluaran(4), saldo(5)]
                     rawData.forEach(rowData => {
-                        // Ambil Tanggal, Keterangan, Pemasukan, Pengeluaran, Saldo
-                        const rowDataToExport = rowData.slice(1); // [tanggal, keterangan, pemasukan, pengeluaran, saldo]
+                        // Buang ID di index 0
+                        const rowDataToExport = rowData.slice(1); 
                         
-                        // Format angka: hapus pemisah ribuan (titik) dan ganti koma desimal (jika ada) ke titik untuk format angka standar CSV
                         const formattedData = rowDataToExport.map(d => {
                             if (typeof d === 'string') {
-                                // Hapus tanda minus jika angka positif, biarkan jika negatif
                                 const isNegative = d.includes('-');
                                 const cleanD = d.replace(/[^0-9,.]/g, '').replace(',', '.');
-                                // Hanya format yang terlihat seperti angka
                                 return !isNaN(parseFloat(cleanD)) ? (isNegative ? `-${cleanD.replace('-', '')}` : cleanD) : d;
                             }
-                            // Jika sudah dalam bentuk angka, konversi ke string
                             return String(d).replace(/\./g, '').replace(',', '.');
                         });
                         
-                        if (formattedData.length === 5) { // 5 kolom: Tanggal, Keterangan, Pemasukan, Pengeluaran, Saldo
+                        if (formattedData.length === 5) { 
                              csv.push(formattedData.join(';'));
                         }
                     });
@@ -1164,7 +1094,6 @@
                     const link = document.createElement("a");
                     const url = URL.createObjectURL(blob);
                     
-                    // Nama file: Keuangan_Kategori.csv
                     link.setAttribute("href", url);
                     link.setAttribute("download", `Keuangan_${currentSelectedCategory}.csv`);
                     link.style.visibility = 'hidden';
@@ -1182,15 +1111,14 @@
                 });
         }
 
-
-        /** Fungsi untuk inisialisasi awal saat halaman dimuat (Initial Function Call) */
+        // Inisialisasi Saat Halaman Dimuat
         function initialize() {
-            // 1. Buat tombol Kategori
+            // Buat tombol kategori
             CATEGORY_DATA.forEach(category => {
                 filterBulanContainer.appendChild(createCategoryButton(category));
             });
 
-            // 2. Set event listener untuk konfirmasi hapus
+            // Event Listener Modal Hapus
             tombolKonfirmasiHapus.onclick = deleteTransaction;
             tombolBatalHapus.onclick = () => {
                 modalHapus.classList.remove('modal-open');
@@ -1198,14 +1126,14 @@
                 transactionIdToDelete = null;
             };
 
-            // 3. Muat data untuk kategori default (Mahar) dan Saldo Global
+            // Ambil data pertama kali
             fetchData();
         }
 
-        // Jalankan inisialisasi setelah DOM dimuat
+        // Jalankan Inisialisasi
         document.addEventListener('DOMContentLoaded', initialize);
         
-        // Expose fungsi ke scope global agar bisa diakses dari atribut onclick di HTML
+        // Ekspos fungsi ke window agar bisa diakses oleh onclick di HTML
         window.startEdit = startEdit;
         window.showDeleteConfirmation = showDeleteConfirmation;
         window.addRowToTable = addRowToTable;
